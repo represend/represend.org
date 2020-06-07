@@ -5,10 +5,11 @@ import SearchBar from "../components/SearchBar"
 
 import QueryController from "../controllers/QueryController"
 
-const Search = ({ address, data, message }) => {
+const Search = (props) => {
+  const [message, setMessage] = React.useState(props.message ? props.message : "");
   return (
     <Layout title="Send Change">
-      <SearchBar/>
+      <SearchBar address={props.address}/>
       <Container maxWidth="sm">
         <Typography variant="h6">
           information below
@@ -24,7 +25,6 @@ const Search = ({ address, data, message }) => {
 export const getServerSideProps = async (ctx) => {
   try {
     const response = await QueryController.query(ctx.query.address);
-    console.log(response.data)
     return {
       props: {
         address: ctx.query.address,
@@ -43,4 +43,4 @@ export const getServerSideProps = async (ctx) => {
   }
 }
 
-export default Search
+export default Search;

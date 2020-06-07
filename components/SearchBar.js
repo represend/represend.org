@@ -4,9 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Search, MyLocation } from "@material-ui/icons";
 import { Grid, FormControl, FormHelperText, OutlinedInput, InputAdornment, IconButton, Divider } from "@material-ui/core";
 
-import { findLocation } from "../util/util"
+import { findLocation } from "../util/util";
 
-const DEBUG = process.env.NODE_ENV != "production"
+const DEBUG = process.env.NODE_ENV != "production";
 
 const useStyles = makeStyles((theme) => ({
   searchbar: {
@@ -20,21 +20,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const SearchBar = () => {
+const SearchBar = (props) => {
   const classes = useStyles();
-  const [query, setQuery] = React.useState("");
+  const [address, setAddress] = React.useState(props.address ? props.address : "")
 
   const handleSearch = () => {
     Router.push({
       pathname: "/search",
-      query: { address: query },
+      query: { address: address },
     });
   }
 
   const handleLocateUser = async () => {
     try {
       const address = await findLocation();
-      setQuery(address)
+      setAddress(address)
       Router.push({
         pathname: "/search",
         query: { address: address },
@@ -53,8 +53,14 @@ const SearchBar = () => {
           id="search-input"
           className={classes.input}
           placeholder="Search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          value={address}
+          onChange={(event) => setAddress(event.target.value)}
+          onKeyPress={(event) => {
+            if (event.key==="Enter") {
+              handleSearch();
+              event.preventDefault();
+            };
+          }}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -86,4 +92,4 @@ const SearchBar = () => {
   )
 }
 
-export default SearchBar
+export default SearchBar;
