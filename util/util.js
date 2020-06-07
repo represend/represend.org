@@ -4,22 +4,21 @@ module.exports = {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
-            const payload = {
-              latlng: `${position.coords.latitude},${position.coords.longitude}`
-            }
             try {
               const response = await fetch(
                 "/api/locate",
                 {
                   method: "POST",
-                  body: payload
+                  body: JSON.stringify({latlng: `${position.coords.latitude},${position.coords.longitude}`}),
+                  headers: {"Content-Type": "application/json"},
                 }
               );
               if (response.ok) {
                 const data = await response.json();
                 resolve(data.address);
               } else {
-                reject(new Error(`Server Error ${response.status}: ${response.statusText}`));
+                const error = await response.json()
+                reject(new Error(`Server Error ${response.status}: ${response.statusText}. ${error.message}`));
               }
             } catch (error) {
               reject(error);

@@ -8,7 +8,7 @@ const locate = async (req, res) => {
       client.reverseGeocode({
         params: {
           latlng: req.body.latlng,
-          key: process.env.GOOGLE_GEOCODING_API_KEY,
+          key: process.env.GOOGLE_CIVIC_API_KEY,
         },
         timeout: 1000,
       })
@@ -18,8 +18,12 @@ const locate = async (req, res) => {
         resolve();
       })
       .catch((error) => {
-        console.log(error.error_message);
-        res.status(500).send(error.error_message);
+        res.setHeader("Content-Type", "application/json");
+        if (error.response) {
+          res.status(500).send(JSON.stringify({status: error.response.data.status, message: error.response.data.error_message}));
+        } else {
+          res.status(500).send(JSON.stringify({message: 'Unable to process request.'}))
+        }
         resolve();
       });
     })
