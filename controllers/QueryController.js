@@ -7,7 +7,7 @@ const civicinfo = google.civicinfo({
 
 var QueryController = {};
 
-QueryController.query = (address) => {
+QueryController.query = (address, levels=[], roles=[]) => {
   return new Promise((resolve, reject) => {
     if (!address) {
       reject({message: "Invalid Address"})
@@ -15,6 +15,8 @@ QueryController.query = (address) => {
     civicinfo.representatives.representativeInfoByAddress({
       address: address,
       includeOffices: true,
+      levels: levels,
+      roles: roles,
     })
     .then((response) => {
       resolve({data: response.data})

@@ -10,7 +10,9 @@ const DEBUG = process.env.NODE_ENV != "production";
 
 const useStyles = makeStyles((theme) => ({
   searchbar: {
-    padding: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
   },
   input: {
     [`& fieldset`]: {

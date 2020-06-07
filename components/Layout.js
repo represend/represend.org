@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Container, CssBaseline } from "@material-ui/core"
+import { Container, CssBaseline } from "@material-ui/core";
 
 import Head from "./Head";
 import Header from "./Header";
@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "100vh",
   },
   main: {
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
   footer: {

@@ -3,7 +3,7 @@ import QueryController from "../../controllers/QueryController"
 const query = async (req, res) => {
   if (req.method==="POST") {
     return new Promise((resolve) => {
-      QueryController.query(req.body.address)
+      QueryController.query(req.body.address, req.body.levels, req.body.roles)
       .then((response) => {
         res.setHeader("Content-Type", "application/json");
         res.status(200).send(JSON.stringify(response));
