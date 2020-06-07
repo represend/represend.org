@@ -1,6 +1,6 @@
 module.exports = {
   findLocation: async () => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
@@ -36,22 +36,21 @@ module.exports = {
 
   searchCivics: async (address) => {
     return new Promise(async (resolve, reject) => {
-      const payload = {
-        address: address
-      }
       try {
         const response = await fetch(
-          "api/query",
+          "/api/query",
           {
             method: "POST",
-            body: payload
-          }
+            body: JSON.stringify({address: address}),
+            headers: {"Content-Type": "application/json"},
+          },
         )
         if (response.ok) {
-          const data = await response.json()
-          resolve(data.reps);
+          const data = await response.json();
+          resolve(data.address);
         } else {
-          reject(new Error(`Server Error ${response.status}: ${response.statusText}`));
+          const error = await response.json()
+          reject(new Error(`Server Error ${response.status}: ${response.statusText}. ${error.message}`));
         }
       } catch (error) {
         reject(error);

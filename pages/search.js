@@ -3,12 +3,9 @@ import { Container, Typography } from "@material-ui/core"
 import Layout from "../components/Layout"
 import SearchBar from "../components/SearchBar"
 
-import { searchCivics } from "../util/util"
+import QueryController from "../controllers/QueryController"
 
-const Search = (props) => {
-  const { address } = props
-  console.log(address)
-  console.log(props)
+const Search = ({ address, data, message }) => {
   return (
     <Layout title="Send Change">
       <SearchBar/>
@@ -16,22 +13,32 @@ const Search = (props) => {
         <Typography variant="h6">
           information below
         </Typography>
+          {message}
         <Typography variant="body1">
-          more informaton
         </Typography>
       </Container>
     </Layout>
   )
 }
 
-Search.getInitalProps = async (ctx) => {
-  // get params
-  const address = ctx.query.address
-  console.log(address)
-  const res = await searchCivics(address);
-  return { 
-    prop: {
-      address: address 
+export const getServerSideProps = async (ctx) => {
+  try {
+    const response = await QueryController.query(ctx.query.address);
+    console.log(response.data)
+    return {
+      props: {
+        address: ctx.query.address,
+        data: response.data,
+        message: 'Success',
+      }
+    }
+  } catch (error) {
+    return {
+      props: {
+        address: ctx.query.address,
+        data: null,
+        message: error.message,
+      }
     }
   }
 }
