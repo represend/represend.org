@@ -8,7 +8,7 @@ const locate = async (req, res) => {
       client.reverseGeocode({
         params: {
           latlng: req.body.latlng,
-          key: process.env.GOOGLE_CIVIC_API_KEY,
+          key: process.env.GOOGLE_GEOCODING_API_KEY,
         },
         timeout: 1000,
       })
