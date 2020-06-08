@@ -34,7 +34,7 @@ const Search = ({ host, address, message, data, error }) => {
 }
 
 export const getServerSideProps = async (ctx) => {
-  const host = `http://${ctx.req.headers.host}`
+  const host = `https://${ctx.req.headers.host}`
   try {
     const response = await QueryController.query(ctx.query.address, levels);
     const error = !("divisions" in response.data);
