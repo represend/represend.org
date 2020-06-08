@@ -1,31 +1,12 @@
 import React from "react"
-import Router from "next/router"
 
 import { Container, Typography } from "@material-ui/core"
 
-import Layout from "../components/Layout"
-import SearchBar from "../components/SearchBar"
-
-import { findLocation } from "../util/util"
+import Layout from "../src/components/Layout"
+import SearchBar from "../src/components/SearchBar"
 
 const DEBUG = process.env.NODE_ENV != "production"
 class Home extends React.Component {
-  // don't force geolocation everytime
-  // async componentDidMount() {
-  //   try {
-  //     const address = await findLocation()
-  //     console.log(address)
-  //     Router.push({
-  //       pathname: "/search",
-  //       query: { address: address },
-  //     })
-  //   } catch (error) {
-  //     if (DEBUG) { 
-  //       console.log(error.message)
-  //     }
-  //   }
-  // }
-
   render() {
     return (
       <Layout title="Send Change">

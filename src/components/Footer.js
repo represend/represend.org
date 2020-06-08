@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     padding: theme.spacing(1),
     marginTop: "auto",
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.white,
   },
 }));
 
@@ -20,7 +20,7 @@ const Footer = () => {
           {new Date().getFullYear()} {" Send Change"} 
           {" | "}
           <Link color="inherit" href="https://github.com/donutdaniel/sendchange" target="_blank">
-            {"Code"}
+            {"Contribute"}
           </Link>{" "}
         </Typography>
       </Container>

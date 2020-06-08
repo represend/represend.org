@@ -1,4 +1,4 @@
-import QueryController from "../../controllers/QueryController"
+import QueryController from "../../src/controllers/QueryController"
 
 const query = async (req, res) => {
   if (req.method==="POST") {

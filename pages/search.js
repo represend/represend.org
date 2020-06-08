@@ -1,11 +1,11 @@
 import { Container, Typography } from "@material-ui/core"
 import { useRouter } from "next/router"
 
-import Layout from "../components/Layout"
-import SearchBar from "../components/SearchBar"
-import Letter from "../components/Letter"
+import Layout from "../src/components/Layout"
+import SearchBar from "../src/components/SearchBar"
+import Letter from "../src/components/Letter"
 
-import QueryController from "../controllers/QueryController"
+import QueryController from "../src/controllers/QueryController"
 
 const levels = ["administrativeArea2", "locality", "regional", "subLocality1", "subLocality2"] // City
 
@@ -34,7 +34,6 @@ const Search = ({ host, address, message, data, error }) => {
 }
 
 export const getServerSideProps = async (ctx) => {
-  console.log(ctx.req.url)
   const host = `http://${ctx.req.headers.host}`
   try {
     const response = await QueryController.query(ctx.query.address, levels);

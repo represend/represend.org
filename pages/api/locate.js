@@ -1,4 +1,4 @@
-import LocateController from "../../controllers/LocateController"
+import LocateController from "../../src/controllers/LocateController"
 
 const locate = (req, res) => {
   if (req.method==="POST") {
