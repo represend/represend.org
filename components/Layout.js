@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Container, CssBaseline } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 
-import Head from "./Head";
 import Header from "./Header";
 import Footer from "./Footer"
 
@@ -28,8 +27,6 @@ const Layout = (props) => {
   const { children, title = "Send Change" } = props;
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <Head title={title}/>
       <Header title={title}/>
       <Container component="main" className={classes.main}>
         {children}
