@@ -12,7 +12,7 @@ class Home extends React.Component {
     const IntroBody = ""
 
     return (
-      <Layout title="Send Change 📢">
+      <Layout title="Send Change 📣">
         {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
         <Container maxWidth="sm">
           <Typography variant="h4">
