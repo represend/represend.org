@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 const Letter = ({ division, officials, emails, url }) => {
   const classes = useStyles();
 
-  const [showEmails, setShowEmails] = React.useState(false)
+  const [showNames, setShowNames] = React.useState(false)
 
   const subject = "placeholder subject"
   const body = "placeholder body\nthis is the second line\nand third"
@@ -42,9 +42,9 @@ const Letter = ({ division, officials, emails, url }) => {
             className={classes.switch}
             control={
               <Switch
-                checked={showEmails}
-                onChange={() => {setShowEmails((prev) => !(prev))}}
-                name="showEmails"
+                checked={showNames}
+                onChange={() => {setShowNames((prev) => !(prev))}}
+                name="showNames"
                 color="primary"
                 size="small"
               />
@@ -53,7 +53,7 @@ const Letter = ({ division, officials, emails, url }) => {
           />
         </Grid>
         <Typography variant="body1">
-          {showEmails ? emails : officials}
+          {showNames ? officials : emails}
         </Typography>
       </Grid>
       <Grid item xs={12}>
