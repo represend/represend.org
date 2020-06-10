@@ -71,7 +71,7 @@ const SearchBar = (props) => {
             id="search-input"
             className={classes.input}
             variant="outlined"
-            placeholder="Search"
+            placeholder="San Francisco, Los Angeles, New York, ..."
             value={address}
             onChange={(event) => handleChange(event.target.value)}
             onKeyPress={(event) => {

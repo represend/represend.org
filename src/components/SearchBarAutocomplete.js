@@ -191,6 +191,7 @@ const SearchBarAutocomplete = (props) => {
                 {...params}
                 className={classes.input}
                 variant="outlined"
+                placeholder="San Francisco, Los Angeles, New York, ..."
                 InputProps={{
                   ...params.InputProps,
                   endAdornment:

@@ -36,7 +36,7 @@ const Letter = ({ division, officials, emails, url, toast }) => {
       <Grid item xs={12}>
         <Grid container direction="row" justify="space-between">
           <Typography variant="body1">
-            <strong>To: </strong>
+            <b>To: </b>
           </Typography>
           <FormControlLabel
             className={classes.switch}
@@ -58,15 +58,15 @@ const Letter = ({ division, officials, emails, url, toast }) => {
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1">
-          <strong>Subject: </strong> 
+          <b>Subject: </b> 
           {subject}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1">
-          <strong>
+          <b>
             Message:
-          </strong>
+          </b>
         </Typography>
         <Typography component="pre" variant="body1">
           {body}

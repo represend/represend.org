@@ -1,4 +1,4 @@
-import { Container, Typography, Snackbar, Grow } from "@material-ui/core"
+import { Container, Grid, Typography, Snackbar, Grow, Link } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import { useRouter } from "next/router"
 
@@ -70,14 +70,40 @@ const Search = ({ host, address, message, data, error }) => {
 
   function renderBody() {
     if (error) {
-      return <Typography align="center">Sorry, {message}</Typography>
+      return (
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12}>
+            <Typography variant="h4">
+              Oops! 📍
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1">
+              <b>{message}</b>
+              <br/><br/>
+              Sorry we couldn't find your location! Our search results are based off{" "}
+              <Link href="https://developers.google.com/civic-information">Google's Civic Information API</Link>
+              , so they may not be perfect. Currently, the results are limited to the US, and Send Change only searches at the local level - your county and city.
+              <br/><br/>
+              Some frequent errors are:
+              <ul style={{margin: 0}}>
+                <li>Entering the state or country</li>
+                <li>Location not in US</li>
+                <li>Typo (happens to us too)</li>
+              </ul>
+              <br/>
+              <b>We encourage you to try again, but if the problem persists, there are many other communities that could use your help!</b>
+            </Typography>
+          </Grid>
+        </Grid>
+      )
     } else {
       return <Letter division={divisionID} officials={officials} emails={emails} url={url} toast={showToast}/>
     }
   }
 
   return (
-    <Layout title="Send Change">
+    <Layout title="Send Change 📢">
       {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete address={address}/> : <SearchBar address={address}/>}
       <Container maxWidth="sm">
         {renderBody()}
@@ -106,7 +132,7 @@ export const getServerSideProps = async (ctx) => {
         host: host,
         address: ctx.query.address,
         data: response.data,
-        message: error ? "the location could not be found." : "",
+        message: error ? "We could not find your location" : "",
         error: error,
       }
     }
