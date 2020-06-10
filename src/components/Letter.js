@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Letter = ({ division, officials, emails, url, toast }) => {
+const Letter = ({ title, officials, emails, url, toast }) => {
   const classes = useStyles();
 
   const [showNames, setShowNames] = React.useState(false)
@@ -31,7 +31,7 @@ const Letter = ({ division, officials, emails, url, toast }) => {
     <Grid container spacing={3} alignItems="center">
       <Grid item xs={12}>
         <Typography variant="h4">
-          {division} 📍
+          {title} 📍
         </Typography>
       </Grid>
       <Grid item xs={12}>
