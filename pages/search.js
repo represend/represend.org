@@ -9,17 +9,56 @@ import QueryController from "../src/controllers/QueryController"
 
 const levels = ["administrativeArea2", "locality", "regional", "subLocality1", "subLocality2"] // City
 
+const constructDivisionID = (data) => {
+  if (!data || !data.divisions) {
+    return null
+  }
+  const divisions = data.divisions
+  // Rank by county, place (mutually exclusive)
+  let searchIDs = []
+  for (let key in divisions) {
+    if (key.includes("county")) {
+      searchIDs.unshift(divisions[key].name)
+    } else if (key.includes("place")) {
+      searchIDs.push(divisions[key].name)
+    }
+  }
+  let searchID = searchIDs.join(", ")
+  // To Title Case
+  searchID = searchID.split(" ").map((x) =>  {return x[0].toUpperCase() + x.substr(1)}).join(" ")
+  return searchID
+}
+
+const constructOfficials = (data) =>  {
+  if (!data || !data.offices || !data.officials){
+    return [null, null]
+  }
+  let officials = []
+  let emails = []
+  for (let i = 0; i < data.offices.length; i++) {
+    let office = data.offices[i]
+    if ("officialIndices" in office) {
+      let official = data.officials[office.officialIndices[0]]
+      if ("emails" in official) {
+        officials.push(`${office.name} ${official.name}`)
+        emails.push(official.emails[0])
+      }
+    }
+  }
+  return [officials.join(", "), emails.join(", ")]
+}
+
 const Search = ({ host, address, message, data, error }) => {
   const router = useRouter();
-  const district = error ? "" : data.divisions[Object.keys(data.divisions)[0]].name;
-  const emails = error ? "" :data.officials.filter((x) => {return "emails" in x}).map((x) => {return x.emails[0]}).join(', ');
+  const divisionID = constructDivisionID(data);
+  const [officials, emails] = constructOfficials(data);
   const url = host + router.asPath
 
   function renderBody() {
     if (error) {
       return <Typography align="center">Sorry, {message}</Typography>
     } else {
-      return <Letter district={district} emails={emails} url={url}/>
+      return <Letter division={divisionID} officials={officials} emails={emails} url={url}/>
     }
   }
 

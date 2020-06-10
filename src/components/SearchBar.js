@@ -28,15 +28,13 @@ const useStyles = makeStyles((theme) => ({
 const SearchBar = (props) => {
   const classes = useStyles();
   const [address, setAddress] = React.useState(props.address ? props.address : "");
-  const [searching, setSearching] = React.useState(false)
+  const [searching, setSearching] = React.useState(false);
 
   const handleSearch = () => {
     setSearching(true)
     Router.push({
       pathname: "/search",
       query: { address: address },
-    }).finally(() => {
-      setSearching(false)
     });
   }
 
@@ -53,9 +51,8 @@ const SearchBar = (props) => {
       if (DEBUG) { 
         console.log(error.message);
       }
-    } finally {
       setSearching(false)
-    }
+    };
   };
   
   return (
