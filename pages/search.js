@@ -65,7 +65,7 @@ const Search = ({ host, address, message, data, error }) => {
 
   return (
     <Layout title="Send Change">
-      {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
+      {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete address={address}/> : <SearchBar address={address}/>}
       <Container maxWidth="sm">
         {renderBody()}
       </Container>
