@@ -101,7 +101,14 @@ const SearchBarAutocomplete = (props) => {
       setOptions(value ? [value] : []);
       return undefined;
     }
-    fetch({ input: inputValue }, (results) => {
+    const request = {
+      input: inputValue,
+      componentRestrictions: {
+        country: "us"
+      },
+      types: ["(regions)"]
+    }
+    fetch(request, (results) => {
       if (active) {
         let newOptions = [];
         if (value) {
