@@ -68,6 +68,7 @@ const SearchBarAutocomplete = (props) => {
   const [inputValue, setInputValue] = React.useState(props.address ? props.address : "");
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
+  const toast = props.toast;
 
   if (typeof window !== "undefined" && !loaded.current) {
     if (!document.querySelector("#google-maps")) {
@@ -137,7 +138,7 @@ const SearchBarAutocomplete = (props) => {
         query: { address: address },
       });
     } catch (error) {
-      console.log(error.message);
+      toast(error.message, "error")
     } finally {
       setSearching(false)
     };

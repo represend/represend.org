@@ -1,4 +1,5 @@
-import { Container, Typography } from "@material-ui/core"
+import { Container, Typography, Snackbar, Grow } from "@material-ui/core"
+import { Alert } from "@material-ui/lab"
 import { useRouter } from "next/router"
 
 import Layout from "../src/components/Layout"
@@ -55,11 +56,23 @@ const Search = ({ host, address, message, data, error }) => {
   const [officials, emails] = constructOfficials(data);
   const url = host + router.asPath
 
+  const [toastShow, setToastShow] = React.useState(false);
+  const [toastMessage, setToastMessage] = React.useState("");
+  const [toastSeverity, setSeverity] = React.useState("");
+  const handleToastClose = () => {
+    setToastShow(false);
+  };
+  const showToast = (message, severity) => {
+    setToastMessage(message);
+    setSeverity(severity);
+    setToastShow(true);
+  }
+
   function renderBody() {
     if (error) {
       return <Typography align="center">Sorry, {message}</Typography>
     } else {
-      return <Letter division={divisionID} officials={officials} emails={emails} url={url}/>
+      return <Letter division={divisionID} officials={officials} emails={emails} url={url} toast={showToast}/>
     }
   }
 
@@ -69,6 +82,16 @@ const Search = ({ host, address, message, data, error }) => {
       <Container maxWidth="sm">
         {renderBody()}
       </Container>
+      <Snackbar 
+        open={toastShow} 
+        autoHideDuration={2000} 
+        onClose={handleToastClose}
+        TransitionComponent={Grow}
+      >
+        <Alert elevation={3} variant="outlined" onClose={handleToastClose} severity={toastSeverity}>
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </Layout>
   )
 }

@@ -45,7 +45,6 @@ MapsController.autocomplete = (query) => {
       resolve({predictions: response.data.predictions})
     })
     .catch((error) => {
-      console.log(error)
       if (error.response) {
         reject({message: error.response.data.error_message});
       } else {

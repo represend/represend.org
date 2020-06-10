@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Letter = ({ division, officials, emails, url }) => {
+const Letter = ({ division, officials, emails, url, toast }) => {
   const classes = useStyles();
 
   const [showNames, setShowNames] = React.useState(false)
@@ -81,7 +81,7 @@ const Letter = ({ division, officials, emails, url }) => {
       </Grid>
       <Grid item xs={6}>
         <CopyToClipboard text={url}>
-          <Button size="large" fullWidth>
+          <Button size="large" onClick={() => {toast("URL Copied to Clipboard", "success")}} fullWidth>
             Share 🌎
           </Button>
         </CopyToClipboard>

@@ -27,6 +27,7 @@ const SearchBar = (props) => {
   const classes = useStyles();
   const [address, setAddress] = React.useState(props.address ? props.address : "");
   const [searching, setSearching] = React.useState(false);
+  const toast = props.toast;
 
   const handleChange = (query) => {
     setAddress(query)
@@ -51,7 +52,7 @@ const SearchBar = (props) => {
         query: { address: address },
       });
     } catch (error) {
-      console.log(error.message);
+      toast(error.message, "error")
     } finally {
       setSearching(false)
     };
