@@ -35,7 +35,8 @@ const SearchBar = (props) => {
     Router.push({
       pathname: "/search",
       query: { address: address },
-    });
+    })
+    setSearching(false)
   }
 
   const handleLocateUser = async () => {
@@ -51,6 +52,7 @@ const SearchBar = (props) => {
       if (DEBUG) { 
         console.log(error.message);
       }
+    } finally {
       setSearching(false)
     };
   };
