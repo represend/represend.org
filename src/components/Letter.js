@@ -49,7 +49,7 @@ const Letter = ({ division, officials, emails, url }) => {
                 size="small"
               />
             }
-            label="Emails"
+            label="Names"
           />
         </Grid>
         <Typography variant="body1">

@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 
 import Layout from "../src/components/Layout"
 import SearchBar from "../src/components/SearchBar"
+import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 import Letter from "../src/components/Letter"
 
 import QueryController from "../src/controllers/QueryController"
@@ -64,7 +65,7 @@ const Search = ({ host, address, message, data, error }) => {
 
   return (
     <Layout title="Send Change">
-      <SearchBar address={address}/>
+      {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
       <Container maxWidth="sm">
         {renderBody()}
       </Container>

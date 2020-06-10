@@ -1,9 +1,9 @@
-import LocateController from "../../src/controllers/LocateController"
+import MapsController from "../../src/controllers/MapsController"
 
 const locate = (req, res) => {
   if (req.method==="POST") {
     return new Promise((resolve) => {
-      LocateController.locate(req.body.latlng)
+      MapsController.locate(req.body.latlng)
       .then((response) => {
         res.setHeader("Content-Type", "application/json");
         res.status(200).send(JSON.stringify(response));

@@ -2,11 +2,9 @@ import Router from "next/router"
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Search, MyLocation } from "@material-ui/icons";
-import { Grid, FormControl, FormHelperText, OutlinedInput, InputAdornment, IconButton, CircularProgress } from "@material-ui/core";
+import { Grid, FormControl, FormHelperText, TextField, InputAdornment, IconButton, CircularProgress } from "@material-ui/core";
 
 import { findLocation } from "../util/util";
-
-const DEBUG = process.env.NODE_ENV != "production";
 
 const useStyles = makeStyles((theme) => ({
   searchbar: {
@@ -30,6 +28,10 @@ const SearchBar = (props) => {
   const [address, setAddress] = React.useState(props.address ? props.address : "");
   const [searching, setSearching] = React.useState(false);
 
+  const handleChange = (query) => {
+    setAddress(query)
+  }
+
   const handleSearch = () => {
     setSearching(true)
     Router.push({
@@ -49,9 +51,7 @@ const SearchBar = (props) => {
         query: { address: address },
       });
     } catch (error) {
-      if (DEBUG) { 
-        console.log(error.message);
-      }
+      console.log(error.message);
     } finally {
       setSearching(false)
     };
@@ -66,41 +66,38 @@ const SearchBar = (props) => {
     >
       <Grid item xs={12}>
         <FormControl variant="outlined">
-          <OutlinedInput
+          <TextField
             id="search-input"
             className={classes.input}
+            variant="outlined"
             placeholder="Search"
             value={address}
-            onChange={(event) => setAddress(event.target.value)}
+            onChange={(event) => handleChange(event.target.value)}
             onKeyPress={(event) => {
               if (event.key==="Enter") {
                 handleSearch();
                 event.preventDefault();
               };
             }}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="search"
-                  onClick={handleSearch}
-                  edge="end"
-                >
-                  <Search/>
-                </IconButton>
-                <IconButton
-                  aria-label="locate-user"
-                  onClick={handleLocateUser}
-                  edge="end"
-                >
-                  <MyLocation/>
-                </IconButton>
-              </InputAdornment>
-            }
-            aria-describedby="search-helper-text"
-            inputProps={{
-              "aria-label": "search",
+            InputProps={{
+              endAdornment: 
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="search"
+                    onClick={handleSearch}
+                    edge="end"
+                  >
+                    <Search/>
+                  </IconButton>
+                  <IconButton
+                    aria-label="locate-user"
+                    onClick={handleLocateUser}
+                    edge="end"
+                  >
+                    <MyLocation/>
+                  </IconButton>
+                </InputAdornment>
             }}
-            labelWidth={0}
           />
           <FormHelperText id="search-helper-text">Find with City, County, or Zip Code</FormHelperText>
         </FormControl>
