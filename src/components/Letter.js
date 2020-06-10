@@ -18,6 +18,7 @@ const Letter = ({ division, officials, emails, url, toast }) => {
 
   const [showNames, setShowNames] = React.useState(false)
 
+  // need to reformat
   const subject = "placeholder subject"
   const body = "placeholder body\nthis is the second line\nand third"
 
@@ -68,7 +69,7 @@ const Letter = ({ division, officials, emails, url, toast }) => {
             Message:
           </b>
         </Typography>
-        <Typography component="pre" variant="body1">
+        <Typography variant="body1">
           {body}
         </Typography>
       </Grid>

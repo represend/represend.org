@@ -114,7 +114,7 @@ const Search = ({ host, address, message, data, error }) => {
         onClose={handleToastClose}
         TransitionComponent={Grow}
       >
-        <Alert elevation={3} variant="outlined" onClose={handleToastClose} severity={toastSeverity}>
+        <Alert elevation={3} variant="standard" onClose={handleToastClose} severity={toastSeverity}>
           {toastMessage}
         </Alert>
       </Snackbar>

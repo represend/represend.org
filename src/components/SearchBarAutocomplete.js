@@ -225,18 +225,24 @@ const SearchBarAutocomplete = (props) => {
               );
 
               return (
-                <Grid container alignItems="center">
-                  <Grid item xs={12}>
-                    {parts.map((part, index) => (
-                      <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                        {part.text}
-                      </span>
-                    ))}
+                <div style={{flexGrow: 1}}>
+                <Grid container alignItems="center" spacing={1}>
+                  <Grid item>
+                    <Typography>
+                      {parts.map((part, index) => (
+                        <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                          {part.text}
+                        </span>
+                      ))}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
                     <Typography variant="body2" color="textSecondary">
                       {option.structured_formatting.secondary_text}
                     </Typography>
                   </Grid>
                 </Grid>
+                </div>
               );
             }}
           />
