@@ -3,40 +3,50 @@ import fs from "fs"
 
 var LetterController = {};
 
+const parseTags = (str) => {
+  const match = str.match(/(?<=\[).+?(?=\])/g)
+  return match ? match : []
+}
+
 // Returns {
 //   title: string,
 //   emails: [string],
 //   officials: [string],
 //   subject: string,
 //   body: [string],
+//   variables: [string],
+//   add: bool,
 // }
 const parse = (data) => {
   const lines = data.split(/\r?\n/);
+  const states = ["title", "recipient", "subject", "body"];
+  let state = -1;
+  let bodyArr = [];
   let parsedData = {
     title: null,
     officials: [],
     emails: [],
     subject: null,
     body: null,
+    tags: [],
     add: false,
-  }
-  const states = ["title", "recipient", "subject", "body"]
-  let state = -1
+  };
+  // Read Lines
   for (let i = 0; i < lines.length; i++) {
-    let line = lines[i]
-
+    let line = lines[i];
     // State check
     if (line.length > 0 && line[0] === "#") {
       state++;
-      let keywords = line.split(" ")
+      let keywords = line.split(" ");
       if (keywords.length < 2 || keywords[1] != states[state]) {
         throw Error("Unable to parse letter")
       }
       if (line === `# ${states[1]} add`) {
-        parsedData.add = true
+        parsedData.add = true;
       }
     } else if (state === 0) {
       parsedData.title = line
+      parsedData.tags.push(...parseTags(line))
     } else if (state === 1) {
       try {
         let recipient = line.substr(2).split(", ")
@@ -47,23 +57,23 @@ const parse = (data) => {
       }
     } else if (state === 2) {
       parsedData.subject = line
+      parsedData.tags.push(...parseTags(line))
     } else if (state === 3) {
-      if (parsedData.body) {
-        parsedData.body += "\n"
-      } else {
-        parsedData.body = ""
-      }
-      parsedData.body += line
+      bodyArr.push(line)
+      parsedData.tags.push(...parseTags(line))
     }
   }
   if (state != 3) {
     throw Error("Unable to parse letter")
   }
+  // Add body and variables
+  parsedData.body = bodyArr.join("\n");
+  parsedData.tags = [...new Set(parsedData.tags)];
   // default to use search results if no recipients provided
   if (parsedData.officials.length === 0 || parsedData.emails.length === 0) {
-    parsedData.add = true
+    parsedData.add = true;
   }
-  return parsedData
+  return parsedData;
 }
 
 LetterController.query = (divisionIDs) => {

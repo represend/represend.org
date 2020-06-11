@@ -13,11 +13,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Letter = ({ title, officials, emails, subject, body, url, toast }) => {
+const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) => {
   const classes = useStyles();
   const [showNames, setShowNames] = React.useState(false)
 
-  // need to reformat
+  const autoFill = () => {
+    
+  }
 
   const sendMail = () => {
     const mailtoBody = body.replace(/\r?\n/g, "%0D%0A")

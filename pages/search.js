@@ -113,12 +113,18 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         </Grid>
       )
     } else {
+      // Remove Location
+      const index = letterData.tags.indexOf("Location")
+      if (index > -1) { 
+        letterData.tags.splice(index, 1) 
+      }
       let data = {
-        title: letterData.title ? letterData.title.replace(/\[location\]/g, civicLetterData.location) : civicLetterData.title,
+        title: letterData.title ? letterData.title.replace(/\[Location\]/g, civicLetterData.location) : civicLetterData.title,
         officials: letterData.add ? civicLetterData.officials.concat(letterData.officials).join(", ") : letterData.officials.join(", "),
         emails: letterData.add ? civicLetterData.emails.concat(letterData.emails).join(", ") : letterData.emails.join(", "),
-        subject: letterData.subject.replace(/\[location\]/g, civicLetterData.location),
-        body: letterData.body.replace(/\[location\]/g, civicLetterData.location),
+        subject: letterData.subject.replace(/\[Location\]/g, civicLetterData.location),
+        body: letterData.body.replace(/\[Location\]/g, civicLetterData.location),
+        tags: letterData.tags,
         url: url,
         toast: showToast
       }
