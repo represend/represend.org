@@ -19,14 +19,24 @@ if `recipients` data is omitted, then the recipients will default to search reci
 ## Special Functions
 If you include an `add` keyword at the end of `# recipients` such that it looks like `# recipients add`, it will append the list onto the default search recipients. The default behavior replaces search recipients.
 
-## Variable Tags
-Variable tags are available to be used for letter population:
-* `[location]` - Autofilled to city or county
-* `[district]` - User prompted
-* `[name]` - User prompted
-* `[address]` - User prompted
-* `[email]` - User prompted
-* `[phone]` - User prompted
+## Predefined Variable Tags
+Variable tags are case-sensitive keywords that allow you to populate with data pulled from civic searches or prompt users to fill in before sending.
+  
+Predefined variable tags are available to be used for letter population:
+* `[Location]` - Autofilled to city or county
+
+These variable tags are user-prompted and MUST be included in the letter:
+* `[District]`
+* `[Name]`
+* `[Email]`
+* `[Phone Number]`
+
+## Custom Variable Tags
+You can specify any number of custom variable tags, which will prompt users to fill in before sending. Do not use any of the same names as the predefined variable tags!  
+Here are some suggestions:
+* `[Address]`
+* `[Neighborhood]`
+
 
 ## Example
 See `example.md` for an example

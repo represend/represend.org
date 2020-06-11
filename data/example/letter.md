@@ -1,21 +1,18 @@
 # title
 Example Title
 # recipient add
-* recipient1@city.gov, City Mayor Jane Doe
-* recipient2@city.gov, City Sheriff John Smith
+* mayor@city.gov, Mayor Jane Doe
+* secretary@city.gov, Secretary John Smith
 # subject
-Defund [location]'s Police
+An Issue in [Location]
 # body
-Dear [location] Officials,
+Dear [Location] Officials,
 
-My name is [name] and I'm from [district].
+My name is [Name] and I'm from [District].
 
-This is why we need to defund the police in [location]. 
-
-This is your budget allocation, and this is what it needs to look like...
+I'm reaching out to talk about the issue of ...
 
 Thank you,
-[name] 
-[address] 
-[email] 
-[phone]
+[Name]
+[Email] 
+[Phone Number]

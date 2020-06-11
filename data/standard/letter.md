@@ -1,18 +1,17 @@
 # title
 # recipient
 # subject
-Defund [location]'s Police
+Defund [Location]'s Police
 # body
-Dear [location] Officials,
+Dear [Location] Officials,
 
-My name is [name] and I'm from [district].
+My name is [Name] and I'm from [District].
 
-This is why we need to defund the police in [location]. 
+This is why we need to defund the police in [Location]. 
 
 This is your budget allocation, and this is what it needs to look like...
 
 Thank you,
-[name] 
-[address] 
-[email] 
-[phone]
+[Name]
+[Email]
+[Phone Number]
