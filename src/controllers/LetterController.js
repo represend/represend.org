@@ -5,7 +5,8 @@ var LetterController = {};
 
 // Returns {
 //   title: string,
-//   recepients: [{email: string, name: string}],
+//   emails: [string],
+//   officials: [string],
 //   subject: string,
 //   body: [string],
 // }
@@ -57,6 +58,10 @@ const parse = (data) => {
   }
   if (state != 3) {
     throw Error("Unable to parse letter")
+  }
+  // default to use search results if no recipients provided
+  if (parsedData.officials.length === 0 || parsedData.emails.length === 0) {
+    parsedData.add = true
   }
   return parsedData
 }
