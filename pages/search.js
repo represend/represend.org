@@ -12,24 +12,28 @@ import LetterController from "../src/controllers/LetterController"
 
 const levels = ["administrativeArea2", "locality", "regional", "subLocality1", "subLocality2"] // City
 
-const constructDivisionTitle = (data) => {
+const constructDivisionInfo = (data) => {
   if (!data || !data.divisions) {
-    return null
+    return [null, null]
   }
+
+  const toTitleCase = (str) => {
+    return str.split(" ").map((x) => {return x[0].toUpperCase() + x.substr(1)}).join(" ")
+  }
+
   const divisions = data.divisions
   // Rank by county, place (mutually exclusive)
   let divisionNames = []
   for (let key in divisions) {
     if (key.includes("county")) {
-      divisionNames.unshift(divisions[key].name)
+      divisionNames.unshift(toTitleCase(divisions[key].name))
     } else if (key.includes("place")) {
-      divisionNames.push(divisions[key].name)
+      divisionNames.push(toTitleCase(divisions[key].name))
     }
   }
-  let divisionTitle = divisionNames.join(", ")
-  // To Title Case
-  divisionTitle = divisionTitle.split(" ").map((x) =>  {return x[0].toUpperCase() + x.substr(1)}).join(" ")
-  return divisionTitle
+  let title = divisionNames.join(", ")
+  let location = divisionNames.length > 1 ? divisionNames[1] : divisionNames[0]
+  return [title, location]
 }
 
 const constructOfficials = (data) =>  {
@@ -48,13 +52,23 @@ const constructOfficials = (data) =>  {
       }
     }
   }
-  return [officials.join(", "), emails.join(", ")]
+  return [officials, emails]
 }
 
-const Search = ({ host, address, letterData, message, data, error }) => {
-  const router = useRouter();
-  const title = constructDivisionTitle(data);
+const constructCivicLetterData = (data) => {
+  const [title, location] = constructDivisionInfo(data);
   const [officials, emails] = constructOfficials(data);
+  return {
+    title: title,
+    location: location,
+    officials: officials,
+    emails: emails,
+  }
+}
+
+const Search = ({ host, address, civicData, letterData, message, error }) => {
+  const router = useRouter();
+  const civicLetterData = constructCivicLetterData(civicData);
   const url = host + router.asPath
 
   const [toastShow, setToastShow] = React.useState(false);
@@ -99,7 +113,18 @@ const Search = ({ host, address, letterData, message, data, error }) => {
         </Grid>
       )
     } else {
-      return <Letter title={title} officials={officials} emails={emails} url={url} toast={showToast}/>
+      let data = {
+        title: letterData.title ? letterData.title.replace(/\[location\]/g, civicLetterData.location) : civicLetterData.title,
+        officials: letterData.add ? civicLetterData.officials.concat(letterData.officials).join(", ") : letterData.officials.join(", "),
+        emails: letterData.add ? civicLetterData.emails.concat(letterData.emails).join(", ") : letterData.emails.join(", "),
+        subject: letterData.subject.replace(/\[location\]/g, civicLetterData.location),
+        body: letterData.body.replace(/\[location\]/g, civicLetterData.location),
+        url: url,
+        toast: showToast
+      }
+      return (
+        <Letter {...data}/>
+      )
     }
   }
 
@@ -127,31 +152,40 @@ export const getServerSideProps = async (ctx) => {
   const host = `https://${ctx.req.headers.host}`
   try {
     const response = await QueryController.query(ctx.query.address, levels);
-    const error = !("divisions" in response.data);
+    let error = false;
+    let message = "";
     let letterData = null;
-    if (!error) {
-      const divisionIDs = Object.keys(response.data.divisions)
-      letterData = await LetterController.query(divisionIDs)
-      console.log(letterData)
+    // Fetch letter
+    if ("divisions" in response.data) {
+      try {
+        const divisionIDs = Object.keys(response.data.divisions)
+        letterData = await LetterController.query(divisionIDs)
+      } catch (err) {
+        error = true
+        message = "Unable to show letter"
+      }
+    } else {
+      error = true,
+      message = "We could not find your location"
     }
     return {
       props: {
         host: host,
         address: ctx.query.address,
-        data: response.data,
+        civicData: response.data,
         letterData: letterData,
-        message: error ? "We could not find your location" : "",
+        message: message,
         error: error,
       }
     }
-  } catch (error) {
+  } catch (err) {
     return {
       props: {
         host, host,
         address: ctx.query.address,
-        data: null,
+        civicData: null,
         letterData: null,
-        message: error.message,
+        message: err.message,
         error: true,
       }
     }

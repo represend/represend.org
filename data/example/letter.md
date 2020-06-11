@@ -1,5 +1,8 @@
 # title
-# recipient
+Example Title
+# recipient add
+* recipient1@city.gov, City Mayor Jane Doe
+* recipient2@city.gov, City Sheriff John Smith
 # subject
 Defund [location]'s Police
 # body

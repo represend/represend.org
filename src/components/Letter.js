@@ -13,17 +13,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Letter = ({ title, officials, emails, url, toast }) => {
+const Letter = ({ title, officials, emails, subject, body, url, toast }) => {
   const classes = useStyles();
-
   const [showNames, setShowNames] = React.useState(false)
 
   // need to reformat
-  const subject = "placeholder subject"
-  const body = "placeholder body\nthis is the second line\nand third"
 
   const sendMail = () => {
-    const mailtoBody = body.replace("\n", "%0D%0A")
+    const mailtoBody = body.replace(/\r?\n/g, "%0D%0A")
     return `mailto:${emails}?subject=${subject}&body=${mailtoBody}`
   }
 
@@ -70,7 +67,14 @@ const Letter = ({ title, officials, emails, url, toast }) => {
           </b>
         </Typography>
         <Typography variant="body1">
-          {body}
+          {body.split(/\r?\n/g).map((part, index) => {
+            return (
+              <span key={index}>
+                {part}
+                <br/>
+              </span>
+            )
+          })}
         </Typography>
       </Grid>
       <Grid item xs={6}>
