@@ -1,10 +1,11 @@
-import { Container, Grid, Typography, Snackbar, Grow, Link } from "@material-ui/core"
+import { Container, Snackbar, Grow} from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import { useRouter } from "next/router"
 
 import Layout from "../src/components/Layout"
 import SearchBar from "../src/components/SearchBar"
 import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
+import Error from "../src/components/Error"
 import Letter from "../src/components/Letter"
 
 import QueryController from "../src/controllers/QueryController"
@@ -84,31 +85,7 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
   function renderBody() {
     if (error) {
       return (
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12}>
-            <Typography variant="h4">
-              Oops! 📍
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1">
-              <b>{message}</b>
-              <br/><br/>
-              Sorry we couldn't find your location! Our search results are based off{" "}
-              <Link href="https://developers.google.com/civic-information">Google's Civic Information API</Link>
-              , so they may not be perfect. Currently, the results are limited to the US, and Send Change only searches at the local level - your county and city.
-              <br/><br/>
-              Some frequent errors are:
-              <ul style={{margin: 0}}>
-                <li>Entering the state or country</li>
-                <li>Location not in US</li>
-                <li>Typo (happens to us too)</li>
-              </ul>
-              <br/>
-              <b>We encourage you to try again, but if the problem persists, there are many other communities that could use your help!</b>
-            </Typography>
-          </Grid>
-        </Grid>
+        <Error message={message}/>
       )
     } else {
       // Remove Location
