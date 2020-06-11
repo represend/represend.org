@@ -27,7 +27,7 @@ const updateTags = (tags, text) => {
 }
 
 const formatEmail = (text) => {
-  return text.replace(/\r?\n/g, "%0D%0A\n").replace(/[^\S\r\n]/g, "%20")
+  return text.replace(/\r?\n/g, "%0D%0A").replace(/\s/g, "%20")
 }
 
 const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) => {
@@ -35,8 +35,8 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
   const [showNames, setShowNames] = React.useState(false)
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tagValues, setTagValues] = React.useState({});
-  const [mailSubject, setMailSubject] = React.useState(formatEmail(subject))
-  const [mailBody, setMailBody] = React.useState(formatEmail(body))
+  const [mailSubject, setMailSubject] = React.useState(encodeURIComponent(subject))
+  const [mailBody, setMailBody] = React.useState(encodeURIComponent(body))
   const [mailSubjectDisplay, setMailSubjectDisplay] = React.useState(subject)
   const [mailBodyDisplay, setMailBodyDisplay] = React.useState(body)
 
@@ -46,8 +46,8 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
     let newMailSubject = updateTags(tagValues, subject);
     let newMailBody = updateTags(tagValues, body);
     setTagValues(newTagValues);
-    setMailSubject(formatEmail(newMailSubject));
-    setMailBody(formatEmail(newMailBody));
+    setMailSubject(encodeURIComponent(newMailSubject));
+    setMailBody(encodeURIComponent(newMailBody));
     setMailSubjectDisplay(newMailSubject)
     setMailBodyDisplay(newMailBody);
   }
