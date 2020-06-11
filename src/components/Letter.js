@@ -170,7 +170,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
       <DialogActions>
         <Grid container alignItems="center">
           <Grid item xs={6}>
-            <Link href={`mailto:${emails}?subject=${mailSubject}&body=${mailBody}`} underline="none">
+            <Link href={`mailto:${emails}?subject=${mailSubject}&body=${mailBody}`} target="_blank" underline="none">
               <Button size="large" fullWidth>
                 Send 🚀
               </Button>
