@@ -1,5 +1,7 @@
 # title
 Example Title
+# subtitle
+Example Subtitle
 # recipient add
 * mayor@city.gov, Mayor Jane Doe
 * secretary@city.gov, Secretary John Smith
@@ -14,5 +16,6 @@ I'm reaching out to talk about the issue of ...
 
 Thank you,
 [Name]
+[Address]
 [Email] 
 [Phone Number]

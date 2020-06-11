@@ -30,7 +30,7 @@ const formatEmail = (text) => {
   return text.replace(/\r?\n/g, "%0D%0A").replace(/\s/g, "%20")
 }
 
-const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) => {
+const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, toast }) => {
   const classes = useStyles();
   const [showNames, setShowNames] = React.useState(false)
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -67,6 +67,9 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
         <Typography variant="h4">
           {title} 📍
         </Typography>
+        <Typography variant="body2" color="textSecondary">
+          {subtitle}
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Grid container direction="row" justify="space-between">
@@ -94,7 +97,6 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
       <Grid item xs={12}>
         <Typography variant="body1">
           <b>Subject: </b> 
-          <br/>
           {subject}
         </Typography>
       </Grid>
@@ -150,7 +152,6 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
         <DialogContentText>
           <br/>
           <b>Subject: </b>
-          <br/>
           {mailSubjectDisplay}
         </DialogContentText>
         <DialogContentText>

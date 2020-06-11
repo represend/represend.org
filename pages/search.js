@@ -22,18 +22,16 @@ const constructDivisionInfo = (data) => {
   }
 
   const divisions = data.divisions
-  // Rank by county, place (mutually exclusive)
+  // Rank by place, county (mutually exclusive)
   let divisionNames = []
   for (let key in divisions) {
-    if (key.includes("county")) {
+    if (key.includes("place")) {
       divisionNames.unshift(toTitleCase(divisions[key].name))
-    } else if (key.includes("place")) {
+    } else if (key.includes("county")) {
       divisionNames.push(toTitleCase(divisions[key].name))
     }
   }
-  let title = divisionNames.join(", ")
-  let location = divisionNames.length > 1 ? divisionNames[1] : divisionNames[0]
-  return [title, location]
+  return [divisionNames[0], divisionNames.length > 1 ? divisionNames[1] : null]
 }
 
 const constructOfficials = (data) =>  {
@@ -56,11 +54,11 @@ const constructOfficials = (data) =>  {
 }
 
 const constructCivicLetterData = (data) => {
-  const [title, location] = constructDivisionInfo(data);
+  const [location, sublocation] = constructDivisionInfo(data);
   const [officials, emails] = constructOfficials(data);
   return {
-    title: title,
     location: location,
+    sublocation: sublocation,
     officials: officials,
     emails: emails,
   }
@@ -119,7 +117,8 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         letterData.tags.splice(index, 1) 
       }
       let data = {
-        title: letterData.title ? letterData.title.replace(/\[Location\]/g, civicLetterData.location) : civicLetterData.title,
+        title: letterData.title ? letterData.title.replace(/\[Location\]/g, civicLetterData.location) : civicLetterData.location,
+        subtitle: letterData.subtitle ? letterData.title.replace(/\[Location\]/g, civicLetterData.sublocation) : civicLetterData.sublocation,
         officials: letterData.add ? civicLetterData.officials.concat(letterData.officials).join(", ") : letterData.officials.join(", "),
         emails: letterData.add ? civicLetterData.emails.concat(letterData.emails).join(", ") : letterData.emails.join(", "),
         subject: letterData.subject.replace(/\[Location\]/g, civicLetterData.location),

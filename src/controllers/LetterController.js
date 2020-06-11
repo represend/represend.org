@@ -10,6 +10,7 @@ const parseTags = (str) => {
 
 // Returns {
 //   title: string,
+//   subtitle: string,
 //   emails: [string],
 //   officials: [string],
 //   subject: string,
@@ -19,11 +20,12 @@ const parseTags = (str) => {
 // }
 const parse = (data) => {
   const lines = data.split(/\r?\n/);
-  const states = ["title", "recipient", "subject", "body"];
+  const states = ["title", "subtitle", "recipient", "subject", "body"];
   let state = -1;
   let bodyArr = [];
   let parsedData = {
     title: null,
+    subtitle: null,
     officials: [],
     emails: [],
     subject: null,
@@ -41,13 +43,16 @@ const parse = (data) => {
       if (keywords.length < 2 || keywords[1] != states[state]) {
         throw Error("Unable to parse letter")
       }
-      if (line === `# ${states[1]} add`) {
+      if (line === `# ${states[2]} add`) {
         parsedData.add = true;
       }
     } else if (state === 0) {
       parsedData.title = line
       parsedData.tags.push(...parseTags(line))
     } else if (state === 1) {
+      parsedData.subtitle = line
+      parsedData.tags.push(...parseTags(line))
+    } else if (state === 2) {
       try {
         let recipient = line.substr(2).split(", ")
         parsedData.emails.push(recipient[0])
@@ -55,15 +60,15 @@ const parse = (data) => {
       } catch (error) {
         throw Error("Unable to parse letter")
       }
-    } else if (state === 2) {
+    } else if (state === 3) {
       parsedData.subject = line
       parsedData.tags.push(...parseTags(line))
-    } else if (state === 3) {
+    } else if (state === 4) {
       bodyArr.push(line)
       parsedData.tags.push(...parseTags(line))
     }
   }
-  if (state != 3) {
+  if (state != states.length-1) {
     throw Error("Unable to parse letter")
   }
   // Add body and variables
