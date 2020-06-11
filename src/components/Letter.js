@@ -13,11 +13,44 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+// Probably a better way to do this but I'm not good at regex
+const updateTags = (tags, text) => {
+  const keys = Object.keys(tags);
+  let newText = text
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const pattern = new RegExp(`\\[${key}\\]`, "g")
+    const value = tags[key] != "" ? tags[key] : `[${key}]`
+    newText = newText.replace(pattern, value)
+  }
+  return newText
+}
+
+const formatEmail = (text) => {
+  return text.replace(/\r?\n/g, "%0D%0A").replace(/\s/g, "%20")
+}
+
 const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) => {
   const classes = useStyles();
   const [showNames, setShowNames] = React.useState(false)
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tagValues, setTagValues] = React.useState({});
+  const [mailSubject, setMailSubject] = React.useState(subject)
+  const [mailBody, setMailBody] = React.useState(body)
+  const [mailSubjectDisplay, setMailSubjectDisplay] = React.useState(subject)
+  const [mailBodyDisplay, setMailBodyDisplay] = React.useState(body)
+
+  const handleDialogChange = (key, value) => {
+    let newTagValues = tagValues
+    newTagValues[key] = value;
+    let newMailSubject = updateTags(tagValues, subject);
+    let newMailBody = updateTags(tagValues, body);
+    setTagValues(newTagValues);
+    setMailSubject(encodeURIComponent(newMailSubject));
+    setMailBody(encodeURIComponent(newMailBody));
+    setMailSubjectDisplay(newMailSubject)
+    setMailBodyDisplay(newMailBody);
+  }
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -26,11 +59,6 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
-
-  const handleSendMail = () => {
-    const mailtoBody = body.replace(/\r?\n/g, "%0D%0A")
-    return `mailto:${emails}?subject=${subject}&body=${mailtoBody}`
-  }
 
   return (
     <div>
@@ -66,14 +94,13 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
       <Grid item xs={12}>
         <Typography variant="body1">
           <b>Subject: </b> 
+          <br/>
           {subject}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="body1">
-          <b>
-            Message:
-          </b>
+          <b>Message: </b>
         </Typography>
         <Typography variant="body1">
           {body.split(/\r?\n/g).map((part, index) => {
@@ -103,25 +130,46 @@ const Letter = ({ title, officials, emails, subject, body, tags, url, toast }) =
       <DialogTitle>Complete Fields ✏️</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Filling out these tags will automatically populate the email. If you choose to send without filling out this form, make sure to replace the [X] tags with your own values!
+          Filling out these values will automatically populate the email. If you choose to send without filling out this form, make sure to replace the [X]'s with your own values!
         </DialogContentText>
-        {tags.map((tag, index) => {
+        {tags.map((key, index) => {
           return (
             <TextField
-              key={`${tag}-${index}`}
+              key={`${key}-${index}`}
               variant="outlined"
               margin="normal"
-              id={tag}
-              label={tag}
+              id={key}
+              label={key}
+              onChange={(event) => {
+                handleDialogChange(key, event.target.value)
+              }}
               fullWidth
             />
           )
         })}
+        <DialogContentText>
+          <br/>
+          <b>Subject: </b>
+          <br/>
+          {mailSubjectDisplay}
+        </DialogContentText>
+        <DialogContentText>
+          <b>Message: </b>
+          <br/>
+          {mailBodyDisplay.split(/\r?\n/g).map((part, index) => {
+            return (
+              <span key={index}>
+                {part}
+                <br/>
+              </span>
+            )
+          })}
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Grid container alignItems="center">
           <Grid item xs={6}>
-            <Link href={handleSendMail()} underline="none">
+            <Link href={`mailto:${emails}?subject=${mailSubject}&body=${mailBody}`} underline="none">
               <Button size="large" fullWidth>
                 Send 🚀
               </Button>
