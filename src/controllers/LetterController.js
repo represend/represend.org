@@ -72,7 +72,7 @@ const parse = (data) => {
     throw Error("Unable to parse letter")
   }
   // Add body and variables
-  parsedData.body = bodyArr.join("\n");
+  parsedData.body = bodyArr.join("\r\n");
   parsedData.tags = [...new Set(parsedData.tags)];
   // default to use search results if no recipients provided
   if (parsedData.officials.length === 0 || parsedData.emails.length === 0) {
