@@ -111,7 +111,7 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
   }
 
   return (
-    <Layout title="Send Change 📣">
+    <Layout title="Represend 📣">
       {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete address={address}/> : <SearchBar address={address}/>}
       <Container maxWidth="sm">
         {renderBody()}

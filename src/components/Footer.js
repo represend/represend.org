@@ -17,9 +17,9 @@ const Footer = () => {
     <footer className={classes.footer}>
       <Container maxWidth="sm">
         <Typography variant="body2" color="textSecondary" align="center">
-          {new Date().getFullYear()} {" Send Change"} 
+          {new Date().getFullYear()} {" Represend"} 
           {" | "}
-          <Link color="inherit" href="https://github.com/donutdaniel/sendchange" target="_blank">
+          <Link color="inherit" href="https://github.com/represend/represend.org" target="_blank">
             {"Contribute"}
           </Link>{" "}
         </Typography>

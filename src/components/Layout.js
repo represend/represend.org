@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 const Layout = (props) => {
   const classes = useStyles();
 
-  const { children, title = "Send Change" } = props;
+  const { children, title = "Represend" } = props;
   return (
     <div className={classes.root}>
       <Header title={title}/>

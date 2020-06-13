@@ -14,7 +14,7 @@ const Error = ({ message }) => {
           <br/><br/>
           Sorry we couldn't find your location! Our search results are based off{" "}
           <Link href="https://developers.google.com/civic-information">Google's Civic Information API</Link>
-          , so they may not be perfect. Currently, the results are limited to the US, and Send Change only searches at the local level - your county and city.
+          , so they may not be perfect. Currently, the results are limited to the US, and Represend only searches at the local level - your county and city.
         </Typography>
         <br/>
         <Typography>

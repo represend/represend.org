@@ -17,7 +17,7 @@ const Header = ({title}) => {
     <Container className={classes.header} maxWidth="sm">
       <Link href="/">
         <Typography variant="h4" color="inherit" align="center">
-              {title ? title : "Send Change 📣"}
+              {title ? title : "Represend 📣"}
         </Typography>
       </Link>
     </Container>
