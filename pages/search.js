@@ -70,16 +70,31 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
   const civicLetterData = constructCivicLetterData(civicData);
   const url = host + router.asPath
 
+  const [toasts, setToasts] = React.useState([]);
   const [toastShow, setToastShow] = React.useState(false);
-  const [toastMessage, setToastMessage] = React.useState("");
-  const [toastSeverity, setSeverity] = React.useState("");
+  const [toastInfo, setToastInfo] = React.useState(undefined);
+
+  // Limit toasts
+  React.useEffect(() => {
+    if (toasts.length && !toastInfo) {
+      setToastInfo({ ...toasts[0] });
+      setToasts((prev) => prev.slice(1));
+      setToastShow(true);
+    } else if (toasts.length && toastInfo && toastShow) {
+      setToastShow(false);
+    }
+  }, [toasts, toastShow, toastInfo]);
+
   const handleToastClose = () => {
     setToastShow(false);
   };
+
+  const handleToastExited = () => {
+    setToastInfo(undefined);
+  }
+
   const showToast = (message, severity) => {
-    setToastMessage(message);
-    setSeverity(severity);
-    setToastShow(true);
+    setToasts((prev) => [...prev, { message, severity, key: new Date().getTime() }]);
   }
 
   function renderBody() {
@@ -117,13 +132,15 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         {renderBody()}
       </Container>
       <Snackbar 
+        key={toastInfo ? toastInfo.key : undefined}
         open={toastShow} 
         autoHideDuration={2000} 
         onClose={handleToastClose}
+        onExited={handleToastExited}
         TransitionComponent={Grow}
       >
-        <Alert elevation={3} variant="standard" onClose={handleToastClose} severity={toastSeverity}>
-          {toastMessage}
+        <Alert elevation={3} variant="standard" onClose={handleToastClose} severity={toastInfo ? toastInfo.severity : ""}>
+          {toastInfo ? toastInfo.message : ""}
         </Alert>
       </Snackbar>
     </Layout>

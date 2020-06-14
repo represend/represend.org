@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Button, Link, FormControlLabel, Switch, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
+import { Grid, Typography, Button, Link, Tooltip, FormControlLabel, Switch, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const useStyles = makeStyles((theme) => ({
@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
   switch: {
     marginLeft: "auto",
     marginRight: 0,
+  },
+  copy : {
+    cursor: "pointer"
   }
 }));
 
@@ -73,8 +76,10 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
       </Grid>
       <Grid item xs={12}>
         <Grid container direction="row" justify="space-between">
-          <Typography variant="body1">
-            <b>To: </b>
+          <Typography>
+            <CopyToClipboard className={classes.copy} onCopy={() => {toast(`${showNames ? "Names" : "Emails"} Copied to Clipboard`, "success")}} text={showNames ? officials : emails}>
+              <b>To 🔗</b>
+            </CopyToClipboard>
           </Typography>
           <FormControlLabel
             className={classes.switch}
@@ -88,23 +93,30 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
               />
             }
             label="Names"
+            labelPlacement="start"
           />
         </Grid>
-        <Typography variant="body1">
+        <Typography>
           {showNames ? officials : emails}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1">
-          <b>Subject: </b> 
+          <Typography>
+            <CopyToClipboard className={classes.copy} onCopy={() => {toast("Subject Copied to Clipboard", "success")}}  text={subject}>
+              <b>Subject 🔗</b> 
+            </CopyToClipboard>
+          </Typography>
+        <Typography>
           {subject}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="body1">
-          <b>Message: </b>
+        <Typography>
+          <CopyToClipboard className={classes.copy} onCopy={() => {toast("Message Copied to Clipboard", "success")}} text={body}>
+            <b>Message 🔗</b>
+          </CopyToClipboard>
         </Typography>
-        <Typography variant="body1">
+        <Typography>
           {body.split(/\r?\n/g).map((part, index) => {
             return (
               <span key={index}>
@@ -121,8 +133,8 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
         </Button>
       </Grid>
       <Grid item xs={6}>
-        <CopyToClipboard text={url}>
-          <Button size="large" onClick={() => {toast("URL Copied to Clipboard", "success")}} fullWidth>
+        <CopyToClipboard onCopy={() => {toast("URL Copied to Clipboard", "success")}} text={url}>
+          <Button size="large" fullWidth>
             Share 🌎
           </Button>
         </CopyToClipboard>
@@ -131,9 +143,9 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
     <Dialog open={dialogOpen} onClose={handleDialogClose}>
       <DialogTitle>Complete Fields ✏️</DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        <Typography>
           Filling out these values will automatically populate the email. If you choose to send without filling out this form, make sure to replace the [X]'s with your own values!
-        </DialogContentText>
+        </Typography>
         {tags.map((key, index) => {
           return (
             <TextField
@@ -149,13 +161,19 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
             />
           )
         })}
-        <DialogContentText>
+        <Typography>
           <br/>
-          <b>Subject: </b>
+          <CopyToClipboard className={classes.copy} onCopy={() => {toast("Subject Copied to Clipboard", "success")}}  text={mailSubjectDisplay}>
+            <b>Subject 🔗</b> 
+          </CopyToClipboard>
+          <br/>
           {mailSubjectDisplay}
-        </DialogContentText>
-        <DialogContentText>
-          <b>Message: </b>
+        </Typography>
+        <Typography>
+          <br/>
+          <CopyToClipboard className={classes.copy} onCopy={() => {toast("Message Copied to Clipboard", "success")}}  text={mailBodyDisplay}>
+            <b>Message 🔗</b> 
+          </CopyToClipboard>
           <br/>
           {mailBodyDisplay.split(/\r?\n/g).map((part, index) => {
             return (
@@ -165,7 +183,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
               </span>
             )
           })}
-        </DialogContentText>
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Grid container alignItems="center">
