@@ -3,8 +3,8 @@ import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Search, MyLocation } from "@material-ui/icons";
-import { Grid, FormControl, FormHelperText, OutlinedInput, InputAdornment, IconButton, CircularProgress, Typography, TextField } from "@material-ui/core";
+import { Search, MyLocation, Clear } from "@material-ui/icons";
+import { Box, Grid, FormControl, FormHelperText, InputAdornment, IconButton, CircularProgress, Typography, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab"
 
 import { findLocation } from "../util/util";
@@ -17,22 +17,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(2),
   },
-  autocomplete: {
-    root: {
-      '&&[class*="MuiOutlinedInput-root"] $input': {
-        padding: 100
-      },
-      "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: "green"
-      },
-      "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderColor: "red"
-      },
-      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderColor: "purple"
-      }
-    }
-  },
   input: {
     [`& fieldset`]: {
       borderRadius: 20,
@@ -41,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 14,
     },
     minWidth: "300px",
-  },
-  loadingCircle: {
-    paddingTop: theme.spacing(2)
   }
 }));
 
@@ -63,11 +44,12 @@ const autocompleteService = { current: null }
 
 const SearchBarAutocomplete = (props) => {
   const classes = useStyles();
-  const [searching, setSearching] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [value, setValue] = React.useState(props.address ? props.address : null);
   const [inputValue, setInputValue] = React.useState(props.address ? props.address : "");
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
+  const componentIsMounted = React.useRef(true);
   const toast = props.toast;
 
   if (typeof window !== "undefined" && !loaded.current) {
@@ -81,13 +63,16 @@ const SearchBarAutocomplete = (props) => {
     loaded.current = true;
   }
 
-  const fetch = React.useMemo(
-    () =>
-      throttle((request, callback) => {
-        autocompleteService.current.getPlacePredictions(request, callback);
-      }, 200),
-    [],
-  );
+  const fetch = React.useMemo(() => throttle((request, callback) => {
+      autocompleteService.current.getPlacePredictions(request, callback);
+    }, 200), [], );
+
+  React.useEffect(() => {
+    componentIsMounted.current = true;
+    return () => {
+      componentIsMounted.current = false;
+    }
+  }, []);
 
   React.useEffect(() => {
     let active = true;
@@ -126,16 +111,30 @@ const SearchBarAutocomplete = (props) => {
   }, [value, inputValue, fetch]);
 
   const handleSearch = (query) => {
-    setSearching(true)
-    Router.push({
-      pathname: "/search",
-      query: { address: query },
-    })
-    setSearching(false)
+    if (loading) {
+      return;
+    }
+    setLoading(true)
+    try {
+      Router.push({
+        pathname: "/search",
+        query: { address: query },
+      }).finally(() => {
+        if (componentIsMounted.current) {
+          setLoading(false)
+        }
+      });
+    } catch (error) {
+      toast(error.message, "error")
+      setLoading(false)
+    }
   }
 
   const handleLocateUser = async () => {
-    setSearching(true)
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     try {
       const address = await findLocation();
       setValue(address)
@@ -143,12 +142,15 @@ const SearchBarAutocomplete = (props) => {
       Router.push({
         pathname: "/search",
         query: { address: address },
+      }).finally(() => {
+        if (componentIsMounted.current) {
+          setLoading(false)
+        }
       });
     } catch (error) {
       toast(error.message, "error")
-    } finally {
-      setSearching(false)
-    };
+      setLoading(false)
+    }
   };
   
   return (
@@ -158,102 +160,107 @@ const SearchBarAutocomplete = (props) => {
       justify="center" 
       alignItems="center"
     >
-      <Grid item xs={12}>
-        <FormControl variant="outlined">
-          <Autocomplete
-            id="autocomplete"
-            className={classes.autocomplete}
-            getOptionLabel={(option) => (typeof option === "string" ? option : option.description)}
-            filterOptions={(x) => x}
-            options={options}
-            autoComplete
-            freeSolo
-            disableClearable
-            includeInputInList
-            filterSelectedOptions
-            value={value}
-            onChange={(event, newValue) => {
-              setOptions(newValue ? [newValue, ...options] : options);
-              setValue(newValue);
-              handleSearch(newValue.description);
-            }}
-            onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
-            }}
-            onKeyPress={(event) => {
-              if (event.key==="Enter") {
-                handleSearch(inputValue);
-                event.preventDefault();
-              };
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                className={classes.input}
-                variant="outlined"
-                placeholder="San Francisco, Los Angeles, New York, ..."
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment:
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="search"
-                        onClick={() => {
-                          handleSearch(inputValue)
-                        }}
-                        edge="end"
-                      >
-                        <Search/>
-                      </IconButton>
-                      <IconButton
-                        aria-label="locate-user"
-                        onClick={handleLocateUser}
-                        edge="end"
-                      >
+      <FormControl variant="outlined">
+        <Autocomplete
+          id="autocomplete"
+          className={classes.autocomplete}
+          getOptionLabel={(option) => (typeof option === "string" ? option : option.description)}
+          filterOptions={(x) => x}
+          options={options}
+          autoComplete
+          freeSolo
+          disableClearable
+          includeInputInList
+          filterSelectedOptions
+          value={value}
+          onChange={(event, newValue) => {
+            setOptions(newValue ? [newValue, ...options] : options);
+            setValue(newValue);
+            handleSearch(newValue.description ? newValue.description : newValue)
+          }}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              className={classes.input}
+              variant="outlined"
+              placeholder="San Francisco, Los Angeles, New York, ..."
+              InputProps={{
+                ...params.InputProps,
+                endAdornment:
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="search"
+                      onClick={() => {
+                        handleSearch(inputValue)
+                      }}
+                      edge="end"
+                    >
+                      <Search/>
+                    </IconButton>
+                    <IconButton
+                      aria-label="locate-user"
+                      onClick={loading ? (() => {setLoading(false)}) : handleLocateUser}
+                      edge="end"
+                    >
+                      {loading ? (
+                        <Box position="relative" display="inline-flex">
+                          <CircularProgress size={24}/>
+                          <Box
+                            top={0}
+                            left={0}
+                            bottom={0}
+                            right={0}
+                            position="absolute"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Clear/>
+                          </Box>
+                        </Box>
+                      ) : (
                         <MyLocation/>
-                      </IconButton>
-                    </InputAdornment>
-                }}
-                fullWidth
-              />
-            )}
-            renderOption={(option) => {
-              const matches = option.structured_formatting.main_text_matched_substrings;
-              const parts = parse(
-                option.structured_formatting.main_text,
-                matches.map((match) => [match.offset, match.offset + match.length]),
-              );
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+              }}
+              fullWidth
+            />
+          )}
+          renderOption={(option) => {
+            const matches = option.structured_formatting.main_text_matched_substrings;
+            const parts = parse(
+              option.structured_formatting.main_text,
+              matches.map((match) => [match.offset, match.offset + match.length]),
+            );
 
-              return (
-                <div style={{flexGrow: 1}}>
-                <Grid container alignItems="center" spacing={1}>
-                  <Grid item>
-                    <Typography>
-                      {parts.map((part, index) => (
-                        <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-                          {part.text}
-                        </span>
-                      ))}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body2" color="textSecondary">
-                      {option.structured_formatting.secondary_text}
-                    </Typography>
-                  </Grid>
+            return (
+              <div style={{flexGrow: 1}}>
+              <Grid container alignItems="center" spacing={1}>
+                <Grid item>
+                  <Typography>
+                    {parts.map((part, index) => (
+                      <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                        {part.text}
+                      </span>
+                    ))}
+                  </Typography>
                 </Grid>
-                </div>
-              );
-            }}
-          />
-          <FormHelperText id="search-helper-text">Find with City, County, or Zip Code</FormHelperText>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12}>
-        <div className={classes.loadingCircle}>
-          {searching ? <CircularProgress/> : <div></div>}
-        </div>
-      </Grid>
+                <Grid item>
+                  <Typography variant="body2" color="textSecondary">
+                    {option.structured_formatting.secondary_text}
+                  </Typography>
+                </Grid>
+              </Grid>
+              </div>
+            );
+          }}
+        />
+        <FormHelperText id="search-helper-text">Find with City, County, or Zip Code</FormHelperText>
+      </FormControl>
     </Grid>
   )
 }
