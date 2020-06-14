@@ -98,7 +98,7 @@ const buildLetterPath = (divisionIDs) => {
   // Filter place and county
   for (let i = 0; i < divisionIDs.length; i++) {
     let id = divisionIDs[i]
-    let pathComponents = []
+    let pathComponents = ["data"]
     let idComponents = id.split("/")
     if (idComponents.length === 4) {
       // Country
@@ -108,7 +108,7 @@ const buildLetterPath = (divisionIDs) => {
       // Place or County
       pathComponents.push(...idComponents[3].split(":"))
       // Overwrite or not
-      pathComponents[3] = `${pathComponents[3]}.md`
+      pathComponents[pathComponents.length-1] = `${pathComponents[pathComponents.length-1]}.md`
       if (!letterPath || pathComponents[2] === "place") {
         letterPath = pathComponents.join("/")
       } 
