@@ -4,7 +4,7 @@ import throttle from "lodash/throttle";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Search, MyLocation, Clear } from "@material-ui/icons";
-import { Box, Grid, FormControl, FormHelperText, InputAdornment, IconButton, CircularProgress, Typography, TextField } from "@material-ui/core";
+import { Box, Grid, FormControl, FormHelperText, InputAdornment, IconButton, CircularProgress, Typography, TextField, Tooltip } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab"
 
 import { findLocation } from "../util/util";
@@ -191,40 +191,44 @@ const SearchBarAutocomplete = (props) => {
                 ...params.InputProps,
                 endAdornment:
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label="search"
-                      onClick={() => {
-                        handleSearch(inputValue)
-                      }}
-                      edge="end"
-                    >
-                      <Search/>
-                    </IconButton>
-                    <IconButton
-                      aria-label="locate-user"
-                      onClick={loading ? (() => {setLoading(false)}) : handleLocateUser}
-                      edge="end"
-                    >
-                      {loading ? (
-                        <Box position="relative" display="inline-flex">
-                          <CircularProgress size={24}/>
-                          <Box
-                            top={0}
-                            left={0}
-                            bottom={0}
-                            right={0}
-                            position="absolute"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                          >
-                            <Clear/>
+                    <Tooltip title="Search">
+                      <IconButton
+                        aria-label="search"
+                        onClick={() => {
+                          handleSearch(inputValue)
+                        }}
+                        edge="end"
+                      >
+                        <Search/>
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={loading ? "Cancel" : "Find Me"}>
+                      <IconButton
+                        aria-label="action-icons"
+                        onClick={loading ? (() => {setLoading(false)}) : handleLocateUser}
+                        edge="end"
+                      >
+                        {loading ? (
+                          <Box position="relative" display="inline-flex">
+                            <CircularProgress size={24}/>
+                            <Box
+                              top={0}
+                              left={0}
+                              bottom={0}
+                              right={0}
+                              position="absolute"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                            >
+                              <Clear/>
+                            </Box>
                           </Box>
-                        </Box>
-                      ) : (
-                        <MyLocation/>
-                      )}
-                    </IconButton>
+                        ) : (
+                          <MyLocation/>
+                        )}
+                      </IconButton>
+                    </Tooltip>
                   </InputAdornment>
               }}
               fullWidth
