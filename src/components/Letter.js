@@ -20,7 +20,7 @@ const updateTags = (tags, text) => {
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     const pattern = new RegExp(`\\[${key}\\]`, "g")
-    const value = tags[key] != "" ? tags[key] : `[${key}]`
+    const value = tags[key].trim() != "" ? tags[key].trim() : `[${key}]`
     newText = newText.replace(pattern, value)
   }
   return newText
