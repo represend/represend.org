@@ -1,24 +1,32 @@
 import path from "path"
 import fs from "fs"
 
-var LetterController = {};
+var LetterController = {
+  standardLetterPath: "data/standard/letter.md"
+};
 
-const parseTags = (str) => {
-  const match = str.match(/(?<=\[).+?(?=\])/g)
-  return match ? match : []
+const buildLetter = (path) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, "utf-8", (error, data) => {
+      if (error) {
+        reject(error)
+      }
+      try {
+        const letter = parseLetter(data)
+        resolve(letter)
+      } catch (error) {
+        reject({ message: error.message })
+      }
+    });
+  });
 }
 
-// Returns {
-//   title: string,
-//   subtitle: string,
-//   emails: [string],
-//   officials: [string],
-//   subject: string,
-//   body: [string],
-//   variables: [string],
-//   add: bool,
-// }
-const parse = (data) => {
+const parseLetter = (data) => {
+  const parseTags = (str) => {
+    const match = str.match(/(?<=\[).+?(?=\])/g);
+    return match ? match : [];
+  }
+
   const lines = data.split(/\r?\n/);
   const states = ["title", "subtitle", "recipient", "subject", "body"];
   let state = -1;
@@ -81,20 +89,51 @@ const parse = (data) => {
   return parsedData;
 }
 
+// Try API to see id format: https://developers.google.com/civic-information/docs/v2/representatives/representativeInfoByAddress
+// Example Ids: 
+// "ocd-division/country:us/state:il/place:chicago"
+// "ocd-division/country:us/state:il/county:cook", 
+const buildLetterPath = (divisionIDs) => {
+  let letterPath = ""
+  // Filter place and county
+  for (let i = 0; i < divisionIDs.length; i++) {
+    let id = divisionIDs[i]
+    let pathComponents = []
+    let idComponents = id.split("/")
+    if (idComponents.length === 4) {
+      // Country
+      pathComponents.push(idComponents[1].split(":")[1])
+      // State
+      pathComponents.push(idComponents[2].split(":")[1])
+      // Place or County
+      pathComponents.push(...idComponents[3].split(":"))
+      // Overwrite or not
+      pathComponents[3] = `${pathComponents[3]}.md`
+      if (!letterPath || pathComponents[2] === "place") {
+        letterPath = pathComponents.join("/")
+      } 
+    }
+  }
+  return letterPath
+}
+
 LetterController.query = (divisionIDs) => {
   return new Promise((resolve, reject) => {
-    // return the standard letter for now before customizing
-    // can use process.cwd in prod???? we will see??
-    fs.readFile(path.resolve(process.cwd(), "data/standard/letter.md"), "utf-8", (error, data) => {
+    let letterPath = buildLetterPath(divisionIDs)
+    if (!letterPath) {
+      letterPath = LetterController.standardLetterPath
+    }
+    fs.access(path.resolve(process.cwd(), letterPath), fs.constants.F_OK | fs.constants.R_OK, (error) => {
       if (error) {
-        reject(error)
+        letterPath = LetterController.standardLetterPath
       }
-      try {
-        const parsedData = parse(data)
-        resolve(parsedData)
-      } catch (error) {
-        reject({ message: error.message })
-      }
+      buildLetter(path.resolve(process.cwd(), letterPath))
+      .then((data) => {
+        resolve(data)
+      })
+      .catch((error) => {
+        reject({ message : error.message })
+      })
     });
   });
 }
