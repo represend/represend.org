@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "node scripts/generate_data.js && next build",
     "start": "next start -p $PORT",
-    "gen": "node scripts/generate_data.js",
+    "gen": "node scripts/generate_data.js"
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.0.0",
