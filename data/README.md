@@ -6,11 +6,12 @@ Custom letters are supported for each search location result.
 [Google Civic Information API](https://developers.google.com/civic-information/docs/v2/representatives/representativeInfoByAddress?apix_params=%7B%22levels%22%3A%5B%22administrativeArea2%22%2C%22locality%22%2C%22regional%22%2C%22subLocality1%22%2C%22subLocality2%22%5D%7D)
 and enter your address. 
 2. The response body will include a section called `"divisions"`, and the inner keys will be labeled with long division identification strings such as `"ocd-division/country:us/state:wa/place:seattle"` or `"ocd-division/country:us/state:wa/county:king"`. Find the strings that end in either `place:x` or `county:x` and you'll be able to use it to locate the folder you need to write your custom letter in. If both strings show up, choose `place:x` as it takes precedence in our ranking. 
-3. Once you have your string `"ocd-division/country:us/state:wa/place:seattle"`, you'll want to find the matching folder under `data` given the respective country, state, and place/county. If I were to write a custom letter for Seattle in this example, I would create a new file called `seattle.md` under `data/us/wa/place`. The final path would look like `data/us/wa/place/seattle.md`.
-4. Create the file `place.md` or `county.md` and test if it shows up in your local when you perform a search for the area. If you would like it to show up for the place/county counterpart, you can add a duplicate there.
+3. Once you have your string `"ocd-division/country:us/state:wa/place:seattle"`, you'll want to find the matching folder under `data` given the respective country, state, and place/county. If I were to write a custom letter for Seattle in this example, I would create a new file called `seattle.md` under `data/src/us/wa/place`. The final path would look like `data/src/us/wa/place/seattle.md`.
+4. After creating the file, run `yarn gen` to generate the associated json files. This must always be run after any changes or additions.
+4. Test if it shows up in your local when you perform a search for the area. If you would like it to show up for the place/county counterpart, you can add a duplicate as well.
 5. Congrats! The your letter is now part of the search results.
 
-Tip: You can copy-paste `example.md` or `standard.md` as a boilerplate letter to start you off.
+Tip: You can copy-paste `src/example/letter.md` or `src/standard/letter.md` as a boilerplate letter to start you off.
 
 ## Requirements and Guidelines
 All letters MUST have four headers, each denoted by a `#` sign followed by whitespace:
@@ -57,5 +58,9 @@ Here are some suggestions:
 * `[Address]`
 * `[Neighborhood]`
 
+You can prompt the user to enter their own subject line and body by replacing the entire subject or body with a tag such as:
+* `[Subject Line]`
+* `[Email Body]`
+
 ## Example
-See `example.md` for an example.
+See `src/example/letter.md` for an example.

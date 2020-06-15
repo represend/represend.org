@@ -1,93 +1,12 @@
 import path from "path"
 import fs from "fs"
 
+import keyset from "../../data/generated/keyset.json"
+
 var LetterController = {
-  standardLetterPath: "data/standard/letter.md"
+  standardLetterPath: path.join("data", "generated", "standard", "letter.json"),
+  keyset: new Set(keyset)
 };
-
-const buildLetter = (path) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, "utf-8", (error, data) => {
-      if (error) {
-        reject(error)
-      }
-      try {
-        const letter = parseLetter(data)
-        resolve(letter)
-      } catch (error) {
-        reject({ message: error.message })
-      }
-    });
-  });
-}
-
-const parseLetter = (data) => {
-  const parseTags = (str) => {
-    const match = str.match(/(?<=\[).+?(?=\])/g);
-    return match ? match : [];
-  }
-
-  const lines = data.split(/\r?\n/);
-  const states = ["title", "subtitle", "recipient", "subject", "body"];
-  let state = -1;
-  let bodyArr = [];
-  let parsedData = {
-    title: null,
-    subtitle: null,
-    officials: [],
-    emails: [],
-    subject: null,
-    body: null,
-    tags: [],
-    add: false,
-  };
-  // Read Lines
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i];
-    // State check
-    if (line.length > 0 && line[0] === "#") {
-      state++;
-      let keywords = line.split(" ");
-      if (keywords.length < 2 || keywords[1] != states[state]) {
-        throw Error("Unable to parse letter")
-      }
-      if (line === `# ${states[2]} add`) {
-        parsedData.add = true;
-      }
-    } else if (state === 0) {
-      parsedData.title = line
-      parsedData.tags.push(...parseTags(line))
-    } else if (state === 1) {
-      parsedData.subtitle = line
-      parsedData.tags.push(...parseTags(line))
-    } else if (state === 2) {
-      try {
-        let recipient = line.substr(2).split(", ")
-        parsedData.emails.push(recipient[0])
-        parsedData.officials.push(recipient[1])
-      } catch (error) {
-        throw Error("Unable to parse letter")
-      }
-    } else if (state === 3) {
-      parsedData.subject = line
-      parsedData.tags.push(...parseTags(line))
-    } else if (state === 4) {
-      bodyArr.push(line)
-      parsedData.tags.push(...parseTags(line))
-    }
-  }
-  if (state != states.length-1) {
-    throw Error("Unable to parse letter")
-  }
-  // Add body and variables
-  parsedData.body = bodyArr.join("\n");
-  parsedData.tags = [...new Set(parsedData.tags)];
-  // default to use search results if no recipients provided
-  if (parsedData.officials.length === 0 || parsedData.emails.length === 0) {
-    parsedData.add = true;
-  }
-  return parsedData;
-}
 
 // Try API to see id format: https://developers.google.com/civic-information/docs/v2/representatives/representativeInfoByAddress
 // Example Ids: 
@@ -98,7 +17,7 @@ const buildLetterPath = (divisionIDs) => {
   // Filter place and county
   for (let i = 0; i < divisionIDs.length; i++) {
     let id = divisionIDs[i]
-    let pathComponents = ["data"]
+    let pathComponents = ["data", "generated"]
     let idComponents = id.split("/")
     if (idComponents.length === 4) {
       // Country
@@ -108,9 +27,9 @@ const buildLetterPath = (divisionIDs) => {
       // Place or County
       pathComponents.push(...idComponents[3].split(":"))
       // Overwrite or not
-      pathComponents[pathComponents.length-1] = `${pathComponents[pathComponents.length-1]}.md`
+      pathComponents[pathComponents.length-1] = `${pathComponents[pathComponents.length-1]}.json`
       if (!letterPath || pathComponents[2] === "place") {
-        letterPath = pathComponents.join("/")
+        letterPath = path.join(...pathComponents)
       } 
     }
   }
@@ -120,21 +39,15 @@ const buildLetterPath = (divisionIDs) => {
 LetterController.query = (divisionIDs) => {
   return new Promise((resolve, reject) => {
     let letterPath = buildLetterPath(divisionIDs)
-    if (!letterPath) {
+    if (!letterPath || !LetterController.keyset.has(letterPath)) {
       letterPath = LetterController.standardLetterPath
     }
-    fs.access(path.resolve(process.cwd(), letterPath), fs.constants.F_OK | fs.constants.R_OK, (error) => {
+    fs.readFile(path.join(process.cwd(), letterPath), "utf-8", (error, data) => {
       if (error) {
-        letterPath = LetterController.standardLetterPath
+        reject({ message: error.message })
       }
-      buildLetter(path.resolve(process.cwd(), letterPath))
-      .then((data) => {
-        resolve(data)
-      })
-      .catch((error) => {
-        reject({ message : error.message })
-      })
-    });
+      resolve(JSON.parse(data))
+    })
   });
 }
 
