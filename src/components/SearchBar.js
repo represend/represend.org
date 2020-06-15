@@ -1,8 +1,8 @@
 import Router from "next/router"
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Search, MyLocation } from "@material-ui/icons";
-import { Grid, FormControl, FormHelperText, TextField, InputAdornment, IconButton, CircularProgress } from "@material-ui/core";
+import { Search, MyLocation, Clear } from "@material-ui/icons";
+import { Box, Grid, FormControl, FormHelperText, TextField, InputAdornment, IconButton, CircularProgress, Tooltip } from "@material-ui/core";
 
 import { findLocation } from "../util/util";
 
@@ -25,37 +25,53 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchBar = (props) => {
   const classes = useStyles();
-  const [address, setAddress] = React.useState(props.address ? props.address : "");
-  const [searching, setSearching] = React.useState(false);
+  const [value, setValue] = React.useState(props.address ? props.address : "");
+  const [loading, setLoading] = React.useState(false);
+  const componentIsMounted = React.useRef(true);
   const toast = props.toast;
 
-  const handleChange = (query) => {
-    setAddress(query)
-  }
+  React.useEffect(() => {
+    componentIsMounted.current = true;
+    return () => {
+      componentIsMounted.current = false;
+    }
+  }, []);
 
   const handleSearch = () => {
-    setSearching(true)
+    if (loading) {
+      return;
+    }
+    setLoading(true)
     Router.push({
       pathname: "/search",
-      query: { address: address },
+      query: { address: value },
+    }).finally(() => {
+      if (componentIsMounted.current) {
+        setLoading(false)
+      }
     })
-    setSearching(false)
   }
 
   const handleLocateUser = async () => {
-    setSearching(true)
+    if (loading) { 
+      return
+    }
+    setLoading(true)
     try {
       const address = await findLocation();
-      setAddress(address)
+      setValue(address)
       Router.push({
         pathname: "/search",
         query: { address: address },
-      });
+      }).finally(() => {
+        if (componentIsMounted.current) {
+          setLoading(false)
+        }
+      })
     } catch (error) {
       toast(error.message, "error")
-    } finally {
-      setSearching(false)
-    };
+      setLoading(false)
+    }
   };
   
   return (
@@ -65,24 +81,26 @@ const SearchBar = (props) => {
       justify="center" 
       alignItems="center"
     >
-      <Grid item xs={12}>
-        <FormControl variant="outlined">
-          <TextField
-            id="search-input"
-            className={classes.input}
-            variant="outlined"
-            placeholder="San Francisco, Los Angeles, New York, ..."
-            value={address}
-            onChange={(event) => handleChange(event.target.value)}
-            onKeyPress={(event) => {
-              if (event.key==="Enter") {
-                handleSearch();
-                event.preventDefault();
-              };
-            }}
-            InputProps={{
-              endAdornment: 
-                <InputAdornment position="end">
+      <FormControl variant="outlined">
+        <TextField
+          id="search-input"
+          className={classes.input}
+          variant="outlined"
+          placeholder="San Francisco, Los Angeles, New York, ..."
+          value={value}
+          onChange={(event) => {
+            setValue(event.target.value)
+          }}
+          onKeyPress={(event) => {
+            if (event.key==="Enter") {
+              handleSearch();
+              event.preventDefault();
+            };
+          }}
+          InputProps={{
+            endAdornment: 
+              <InputAdornment position="end">
+                <Tooltip title="Search">
                   <IconButton
                     aria-label="search"
                     onClick={handleSearch}
@@ -90,24 +108,39 @@ const SearchBar = (props) => {
                   >
                     <Search/>
                   </IconButton>
+                </Tooltip>
+                <Tooltip title={loading ? "Cancel" : "Find Me"}>
                   <IconButton
-                    aria-label="locate-user"
-                    onClick={handleLocateUser}
+                    aria-label="action-icons"
+                    onClick={loading ? (() => {setLoading(false)}) : handleLocateUser}
                     edge="end"
                   >
-                    <MyLocation/>
+                    {loading ? (
+                      <Box position="relative" display="inline-flex">
+                        <CircularProgress size={24}/>
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Clear/>
+                        </Box>
+                      </Box>
+                    ) : (
+                      <MyLocation/>
+                    )}
                   </IconButton>
-                </InputAdornment>
-            }}
-          />
-          <FormHelperText id="search-helper-text">Find with City, County, or Zip Code</FormHelperText>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12}>
-        <div className={classes.loadingCircle}>
-          {searching ? <CircularProgress/> : <div></div>}
-        </div>
-      </Grid>
+                </Tooltip>
+              </InputAdornment>
+          }}
+        />
+        <FormHelperText id="search-helper-text">Find with City, County, or Zip Code</FormHelperText>
+      </FormControl>
     </Grid>
   )
 }
