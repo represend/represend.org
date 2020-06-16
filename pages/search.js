@@ -3,13 +3,13 @@ import { Alert } from "@material-ui/lab"
 import { useRouter } from "next/router"
 
 import Layout from "../src/components/Layout"
-import SearchBar from "../src/components/SearchBar"
-import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 import Error from "../src/components/Error"
 import Letter from "../src/components/Letter"
 
 import QueryController from "../src/controllers/QueryController"
 import LetterController from "../src/controllers/LetterController"
+
+import { logEvent, logException } from "../src/util/analytics";
 
 const levels = ["administrativeArea2", "locality", "regional", "subLocality1", "subLocality2"] // City
 
@@ -73,6 +73,21 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
   const [toasts, setToasts] = React.useState([]);
   const [toastShow, setToastShow] = React.useState(false);
   const [toastInfo, setToastInfo] = React.useState(undefined);
+
+  React.useEffect(() => {
+    if (window.GA_INITIALIZED) {
+      if (error) {
+        logException(message, address)
+        logEvent("search", address)
+      } else if (civicLetterData){
+        let fullLocation = [civicLetterData.location]
+        if (civicLetterData.sublocation) fullLocation.push(civicLetterData.sublocation)
+        logEvent("search", fullLocation.join(", "))
+      } else {
+        logEvent("search", address)
+      }
+    }
+  })
 
   // Limit toasts
   React.useEffect(() => {

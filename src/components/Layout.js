@@ -2,7 +2,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
 
 import Header from "./Header";
-import Footer from "./Footer"
+import Footer from "./Footer";
+
+import { initGA, logPageView } from "../util/analytics";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +27,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Layout = (props) => {
   const classes = useStyles(props);
+
+  React.useEffect(() => {
+    if (!window.GA_INITIALIZED) {
+      initGA();
+      window.GA_INITIALIZED = true
+    }
+    logPageView();
+  })
 
   const { children, search, address, titlePage } = props;
   return (
