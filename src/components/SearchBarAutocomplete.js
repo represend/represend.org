@@ -241,6 +241,9 @@ const SearchBarAutocomplete = (props) => {
           />
         )}
         renderOption={(option) => {
+          if (!option || !option.structured_formatting) {
+            return (<div></div>)
+          }
           const matches = option.structured_formatting.main_text_matched_substrings;
           const parts = parse(
             option.structured_formatting.main_text,
