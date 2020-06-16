@@ -10,7 +10,8 @@ import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(8)
+    paddingTop: theme.spacing(6),
+    paddingBottom: theme.spacing(6)
   },
   text: {
     color: "white"
