@@ -77,10 +77,20 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
   const router = useRouter();
   const civicLetterData = constructCivicLetterData(civicData);
   const url = host + router.asPath
+  const htmlEncoding = React.useRef(undefined)
 
   const [toasts, setToasts] = React.useState([]);
   const [toastShow, setToastShow] = React.useState(false);
   const [toastInfo, setToastInfo] = React.useState(undefined);
+
+  if (typeof navigator !== "undefined" && !htmlEncoding.current) {
+    htmlEncoding.current = false
+    let appVersion = navigator.appVersion
+    // encode only if android :(
+    if (appVersion.includes("Android")) {
+      htmlEncoding.current = true
+    }
+  }
 
   React.useEffect(() => {
     if (window.GA_INITIALIZED) {
@@ -95,7 +105,7 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         logEvent("search", address)
       }
     }
-  })
+  }, [message, address, error])
 
   // Limit toasts
   React.useEffect(() => {
@@ -140,7 +150,8 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         body: letterData.body.replace(/\[Location\]/g, civicLetterData.location),
         tags: letterData.tags,
         url: url,
-        toast: showToast
+        htmlEncoding: htmlEncoding.current,
+        toast: showToast,
       }
       return (
         <Letter {...data}/>

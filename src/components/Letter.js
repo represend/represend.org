@@ -1,5 +1,23 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Button, Link, FormControlLabel, Switch, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
+import { ExpandMore } from "@material-ui/icons"
+import { 
+  Grid, 
+  Typography, 
+  Button, 
+  Link, 
+  Switch, 
+  TextField, 
+  Dialog, 
+  DialogTitle, 
+  DialogActions, 
+  DialogContent, 
+  FormControl,
+  FormControlLabel, 
+  FormHelperText, 
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails
+} from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const useStyles = makeStyles((theme) => ({
@@ -7,9 +25,13 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "inherit",
     margin: theme.spacing(0)
   },
-  switch: {
+  switchLeft: {
     marginLeft: "auto",
     marginRight: 0,
+  },
+  switchRight: {
+    marginLeft: 0,
+    marginRight: "auto",
   },
   copy : {
     cursor: "pointer"
@@ -32,17 +54,21 @@ const updateTags = (tags, text) => {
   return newText
 }
 
-const formatEmail = (text) => {
-  return text.replace(/\r?\n/g, "%0D%0A").replace(/\s/g, "%20")
+const formatEmail = (text, htmlEncode = false) => {
+  if (htmlEncode) {
+    return text.replace(/\r?\n/g, "<br/>")
+  }
+  return encodeURIComponent(text)
 }
 
-const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, toast }) => {
+const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, htmlEncoding, toast }) => {
   const classes = useStyles();
-  const [showNames, setShowNames] = React.useState(false)
+  const [showNames, setShowNames] = React.useState(false);
+  const [htmlEncode, setHtmlEncode] = React.useState(htmlEncoding ? htmlEncoding : false)
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tagValues, setTagValues] = React.useState({});
-  const [mailSubject, setMailSubject] = React.useState(encodeURIComponent(subject))
-  const [mailBody, setMailBody] = React.useState(encodeURIComponent(body))
+  const [mailSubject, setMailSubject] = React.useState(formatEmail(subject, htmlEncoding))
+  const [mailBody, setMailBody] = React.useState(formatEmail(body, htmlEncoding))
   const [mailSubjectDisplay, setMailSubjectDisplay] = React.useState(subject)
   const [mailBodyDisplay, setMailBodyDisplay] = React.useState(body)
 
@@ -52,8 +78,8 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
     let newMailSubject = updateTags(tagValues, subject);
     let newMailBody = updateTags(tagValues, body);
     setTagValues(newTagValues);
-    setMailSubject(encodeURIComponent(newMailSubject));
-    setMailBody(encodeURIComponent(newMailBody));
+    setMailSubject(formatEmail(newMailSubject, htmlEncode));
+    setMailBody(formatEmail(newMailBody, htmlEncode));
     setMailSubjectDisplay(newMailSubject)
     setMailBodyDisplay(newMailBody);
   }
@@ -85,7 +111,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
             </CopyToClipboard>
           </Typography>
           <FormControlLabel
-            className={classes.switch}
+            className={classes.switchLeft}
             control={
               <Switch
                 checked={showNames}
@@ -189,6 +215,31 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
             )
           })}
         </Typography>
+        <br/>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
+            <Typography>Advanced</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <FormControl>
+              <FormControlLabel
+                className={classes.switchRight}
+                control={
+                  <Switch
+                    checked={htmlEncode}
+                    onChange={() => {setHtmlEncode((prev) => !(prev))}}
+                    name="htmlEncode"
+                    color="primary"
+                    size="small"
+                  />
+                }
+                label="HTML Email Encoding"
+                labelPlacement="end"
+              />
+              <FormHelperText>We try to either encode emails on RFC 6068 standards or HTML based on your device.</FormHelperText>
+            </FormControl>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </DialogContent>
       <DialogActions>
         <Grid container alignItems="center">
