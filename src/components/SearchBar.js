@@ -8,9 +8,6 @@ import { findLocation } from "../util/util";
 
 const useStyles = makeStyles((theme) => ({
   searchbar: {
-    paddingBottom: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
   },
   input: {
     [`& fieldset`]: {

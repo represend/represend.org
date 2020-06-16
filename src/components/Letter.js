@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Button, Link, Tooltip, FormControlLabel, Switch, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
+import { Grid, Typography, Button, Link, FormControlLabel, Switch, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const useStyles = makeStyles((theme) => ({

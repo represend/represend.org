@@ -9,9 +9,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
+    backgroundColor: props => props.titlePage && theme.palette.background.secondary
   },
   main: {
-    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3)
   },
   footer: {
     padding: theme.spacing(3, 2),
@@ -22,16 +24,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Layout = (props) => {
-  const classes = useStyles();
+  const classes = useStyles(props);
 
-  const { children, title = "Represend" } = props;
+  const { children, search, address, titlePage } = props;
   return (
     <div className={classes.root}>
-      <Header title={title}/>
+      <Header search={search} address={address}/>
       <Container component="main" className={classes.main}>
         {children}
       </Container>
-      <Footer/>
+      <Footer inverted={titlePage}/>
     </div>
   );
 };

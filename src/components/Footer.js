@@ -6,17 +6,19 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     padding: theme.spacing(1),
     marginTop: "auto",
-    backgroundColor: theme.palette.white,
   },
+  typography: {
+    color: props => props.inverted ? "white" : "black"
+  }
 }));
 
-const Footer = () => {
-  const classes=useStyles()
+const Footer = (props) => {
+  const classes=useStyles(props)
 
   return (
     <footer className={classes.footer}>
       <Container maxWidth="sm">
-        <Typography variant="body2" color="textSecondary" align="center">
+        <Typography className={classes.typography} variant="body2" align="center">
           {new Date().getFullYear()} {" Represend"} 
           {" | "}
           <Link color="inherit" href="https://github.com/represend/represend.org" target="_blank">
