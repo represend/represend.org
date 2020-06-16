@@ -1,23 +1,29 @@
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import red from '@material-ui/core/colors/red';
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 let theme = createMuiTheme({
   palette: {
-    logo: {
-      main: '#d5c9df'
-    },
     primary: {
-      main: '#d5c9df',
+      main: "#5B5EA6",
     },
     secondary: {
-      main: '#19857b',
+      main: "#BDBEDB",
+    },
+    logo: {
+      main: "#FFFFFF",
+      secondary: "#BDBEDB"
+    },
+    logoSecondary: {
+      main: "#5B5EA6",
+      secondary: "#BDBEDB"
     },
     error: {
-      main: red.A400,
+      main: "#CC0000",
+      light: "#FF6666"
     },
     background: {
-      default: '#ffffff',
-    },
+      default: "#FFFFFF",
+      secondary: "#5B5EA6"
+    }
   },
 });
 

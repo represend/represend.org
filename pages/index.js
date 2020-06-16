@@ -1,30 +1,53 @@
 import React from "react"
 
-import { Container, Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import { Grid, Container, Typography, Link } from "@material-ui/core"
 
 import Layout from "../src/components/Layout"
+import Logo from "../src/components/Logo"
 import SearchBar from "../src/components/SearchBar"
 import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 
-class Home extends React.Component {
-  render() {
-    return (
-      <Layout title="Represend 📣">
-        {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
-        <Container maxWidth="sm">
-          <Typography variant="h4">
-            What is Represend?
-          </Typography>
-          <br/>
-          <Typography variant="body1">
-            Lend your voice to others. Speak up about injustices. Make a change, starting in your community.<br/><br/>
-            Represend is a platform where you can access templated emails advocating for defunding the police, and send
-            them to representatives in your county or city.<br/><br/>
-          </Typography>
-        </Container>
-      </Layout>
-    )
+const useStyles = makeStyles((theme) => ({
+  root: {
+    paddingTop: theme.spacing(8)
+  },
+  text: {
+    color: "white"
   }
+}));
+
+const Home = (props) => {
+  const classes = useStyles();
+  return (
+    <Layout titlePage>
+      <Container className={classes.root} maxWidth="md">
+        <Grid 
+          container
+          direction="column" 
+          justify="space-around"
+          alignItems="stretch"
+          spacing={10}
+        >
+          <Grid item>
+            <Typography className={classes.text} variant="h4">
+              <Logo/> is a free to use, crowdsourced platform that empowers you to send demands directly to your representatives.
+            </Typography>
+          </Grid>
+          <Grid item>
+            {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete inverted/> : <SearchBar inverted/>}
+          </Grid>
+          <Grid item>
+            <Link href="/about">
+              <Typography className={classes.text} variant="h5">
+                How To Help 💡
+              </Typography>
+            </Link>
+          </Grid>
+        </Grid>
+      </Container>
+    </Layout>
+  )
 }
 
 export default Home
