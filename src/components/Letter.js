@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
   },
   copy : {
     cursor: "pointer"
+  },
+  letterFont: {
+    fontFamily: theme.typography.letter
   }
 }));
 
@@ -96,7 +99,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
             labelPlacement="start"
           />
         </Grid>
-        <Typography>
+        <Typography className={classes.letterFont}>
           {showNames ? officials : emails}
         </Typography>
       </Grid>
@@ -106,7 +109,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
               <b>Subject 🔗</b> 
             </CopyToClipboard>
           </Typography>
-        <Typography>
+        <Typography className={classes.letterFont}>
           {subject}
         </Typography>
       </Grid>
@@ -116,7 +119,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
             <b>Message 🔗</b>
           </CopyToClipboard>
         </Typography>
-        <Typography>
+        <Typography className={classes.letterFont}>
           {body.split(/\r?\n/g).map((part, index) => {
             return (
               <span key={index}>
@@ -166,7 +169,8 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
           <CopyToClipboard className={classes.copy} onCopy={() => {toast("Subject Copied to Clipboard", "success")}}  text={mailSubjectDisplay}>
             <b>Subject 🔗</b> 
           </CopyToClipboard>
-          <br/>
+         </Typography>
+         <Typography className={classes.letterFont}>
           {mailSubjectDisplay}
         </Typography>
         <Typography>
@@ -174,7 +178,8 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
           <CopyToClipboard className={classes.copy} onCopy={() => {toast("Message Copied to Clipboard", "success")}}  text={mailBodyDisplay}>
             <b>Message 🔗</b> 
           </CopyToClipboard>
-          <br/>
+        </Typography>
+        <Typography className={classes.letterFont}>
           {mailBodyDisplay.split(/\r?\n/g).map((part, index) => {
             return (
               <span key={index}>
