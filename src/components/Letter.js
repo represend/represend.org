@@ -237,7 +237,7 @@ const Letter = ({ title, subtitle, officials, emails, subject, body, tags, url, 
                 label="HTML Email Encoding"
                 labelPlacement="end"
               />
-              <FormHelperText>We try to encode email formatting based on your device, but you can use this switch to manually toggle it.</FormHelperText>
+              <FormHelperText>We try to either encode emails on RFC 6068 standards or HTML based on your device.</FormHelperText>
             </FormControl>
           </ExpansionPanelDetails>
         </ExpansionPanel>
