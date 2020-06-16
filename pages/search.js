@@ -1,3 +1,4 @@
+import { makeStyles } from "@material-ui/core/styles"
 import { Container, Snackbar, Grow} from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import { useRouter } from "next/router"
@@ -65,7 +66,14 @@ const constructCivicLetterData = (data) => {
   }
 }
 
+const useStyles = makeStyles((theme) => ({
+  alert: {
+    borderRadius: 10
+  }
+}));
+
 const Search = ({ host, address, civicData, letterData, message, error }) => {
+  const classes = useStyles()
   const router = useRouter();
   const civicLetterData = constructCivicLetterData(civicData);
   const url = host + router.asPath
@@ -153,7 +161,7 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         onExited={handleToastExited}
         TransitionComponent={Grow}
       >
-        <Alert elevation={3} variant="standard" onClose={handleToastClose} severity={toastInfo ? toastInfo.severity : ""}>
+        <Alert className={classes.alert} elevation={3} icon={false} variant="standard" severity={toastInfo ? toastInfo.severity : ""}>
           {toastInfo ? toastInfo.message : ""}
         </Alert>
       </Snackbar>
