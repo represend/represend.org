@@ -55,7 +55,6 @@ const updateTags = (tags, text) => {
 }
 
 const formatEmail = (text, htmlEncode = false) => {
-  console.log(htmlEncode)
   if (htmlEncode) {
     return text.replace(/\r?\n/g, "<br/>")
   }

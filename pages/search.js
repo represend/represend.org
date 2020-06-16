@@ -105,7 +105,7 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
         logEvent("search", address)
       }
     }
-  })
+  }, [message, address, error])
 
   // Limit toasts
   React.useEffect(() => {
@@ -131,7 +131,6 @@ const Search = ({ host, address, civicData, letterData, message, error }) => {
   }
 
   function renderBody() {
-    console.log(htmlEncoding)
     if (error) {
       return (
         <Error message={message}/>
