@@ -1,7 +1,7 @@
 import React from "react"
-
+import Link from "next/link"
 import { makeStyles } from "@material-ui/core/styles"
-import { Grid, Container, Typography, Link } from "@material-ui/core"
+import { Grid, Container, Typography } from "@material-ui/core"
 
 import Layout from "../src/components/Layout"
 import Logo from "../src/components/Logo"
@@ -9,26 +9,32 @@ import SearchBar from "../src/components/SearchBar"
 import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(6)
+  grid: {
+    minHeight: "70vh"
   },
   text: {
-    color: "white"
+    color: "black",
+  },
+  about: {
+    color: "black",
+    textDecoration: "underline"
+  },
+  link: {
+    cursor: "pointer"
   }
 }));
 
 const Home = (props) => {
   const classes = useStyles();
   return (
-    <Layout titlePage>
-      <Container className={classes.root} maxWidth="md">
+    <Layout>
+      <Container maxWidth="md">
         <Grid 
+          className={classes.grid}
           container
           direction="column" 
-          justify="space-around"
+          justify="space-evenly"
           alignItems="stretch"
-          spacing={10}
         >
           <Grid item>
             <Typography className={classes.text} variant="h4">
@@ -36,11 +42,11 @@ const Home = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete inverted/> : <SearchBar inverted/>}
+            {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
           </Grid>
-          <Grid item>
+          <Grid className={classes.link} item>
             <Link href="/about">
-              <Typography className={classes.text} variant="h5">
+              <Typography className={classes.about} variant="h5">
                 How To Help 💡
               </Typography>
             </Link>

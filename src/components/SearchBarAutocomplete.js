@@ -2,7 +2,7 @@ import Router from "next/router"
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
 
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Search, MyLocation, Clear } from "@material-ui/icons";
 import { Box, Grid, FormControl, FormHelperText, InputAdornment, IconButton, CircularProgress, Typography, TextField, Tooltip } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab"
@@ -12,29 +12,22 @@ import { findLocation } from "../util/util";
 const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY
 
 const useStyles = makeStyles((theme) => ({
-  searchbar: {
-    padding: theme.spacing(1)
-  },
   form: {
     width: "100%",
-    maxWidth: "300px",
-    paddingRight: theme.spacing(1),
-    paddingLeft: theme.spacing(1)
+    maxWidth: "300px"
   },
   input: {
-    ['& [class*="MuiOutlinedInput-root"]']: {
-      '& fieldset': {
-      },
-      '&:hover fieldset': {
-      },
-      '&.Mui-focused fieldset': {
-      },
+    '& .MuiOutlinedInput-root': {
       borderRadius: 20,
       paddingRight: 14,
-      backgroundColor: props => props.inverted ? "white" : "black",
+      backgroundColor: props => props.inverted && "white",
+      '& .MuiInputAdornment-root': {
+        marginLeft: 0,
+      }
     },
     width: "100%",
-    maxWidth: "300px"
+    maxWidth: "300px",
+    minWidth: "140px"
   },
   helper: {
     color: props => props.inverted ? "white" : "black",

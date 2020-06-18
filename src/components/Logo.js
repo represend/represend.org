@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
       if (props.color === "white") return "white"
       if (props.color === "black") return "black"
       return theme.palette.logo.main
-    }
+    },
   },
   title2: {
     color: props => {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
       if (props.color === "white") return "white"
       if (props.color === "black") return "black"
       return theme.palette.logo.secondary
-    }
+    },
   }
 }));
 
@@ -32,6 +32,9 @@ const Logo = ({ variant, color }) => {
       </span>
       <span className={classes.title2}>
         send
+      </span>
+      <span className={classes.title1}>
+        .org
       </span>
     </Typography>
   )
