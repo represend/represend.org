@@ -2,7 +2,7 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 let theme = createMuiTheme({
   typography: {
-    fontFamily: "Noto, sans-serif",
+    fontFamily: "Noto Serif, serif",
     letter: "Noto Serif, serif",
   },
   palette: {
