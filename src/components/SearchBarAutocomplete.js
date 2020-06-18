@@ -12,9 +12,6 @@ import { findLocation } from "../util/util";
 const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY
 
 const useStyles = makeStyles((theme) => ({
-  searchbar: {
-    padding: theme.spacing(1)
-  },
   form: {
     width: "100%",
     maxWidth: "300px"
