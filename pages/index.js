@@ -1,7 +1,7 @@
 import React from "react"
-
+import Link from "next/link"
 import { makeStyles } from "@material-ui/core/styles"
-import { Grid, Container, Typography, Link } from "@material-ui/core"
+import { Grid, Container, Typography } from "@material-ui/core"
 
 import Layout from "../src/components/Layout"
 import Logo from "../src/components/Logo"
@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
   },
   text: {
     color: "black"
+  },
+  link: {
+    cursor: "pointer"
   }
 }));
 
@@ -37,7 +40,7 @@ const Home = (props) => {
           <Grid item>
             {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
           </Grid>
-          <Grid item>
+          <Grid className={classes.link} item>
             <Link href="/about">
               <Typography className={classes.text} variant="h5">
                 How To Help 💡

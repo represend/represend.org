@@ -1,5 +1,7 @@
+import Link from "next/link"
+
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Link, Divider } from "@material-ui/core"
+import { Grid, Divider } from "@material-ui/core"
 
 import Logo from "./Logo"
 import SearchBar from "./SearchBar"
@@ -19,11 +21,22 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 30% 0 30%",
     height: "0.8px",
     backgroundColor: "black"
+  },
+  link: {
+    cursor: "pointer"
   }
 }));
 
 const Header = ({ search = false, address }) => {
   const classes = useStyles()
+
+  const LogoRef = React.forwardRef((props, ref) => {
+    return (
+      <div ref={ref} {...props}>
+        <Logo variant="h4"/>
+      </div>
+    )
+  })
 
   return (
     <div>
@@ -33,9 +46,9 @@ const Header = ({ search = false, address }) => {
       justify="center"
       alignItems="center"
     >
-      <Grid item>
-        <Link href="/" underline="none">
-          <Logo variant="h4"/>
+      <Grid className={classes.link} item>
+        <Link href="/" passHref>
+          <LogoRef/>
         </Link>
       </Grid>
       {search && (

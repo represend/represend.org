@@ -5,8 +5,6 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../src/styles/theme";
 
-import { initGA, logPageView } from "../src/util/analytics";
-
 const MyApp = (props) => {
   const { Component, pageProps } = props;
 
@@ -17,14 +15,6 @@ const MyApp = (props) => {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
-
-  React.useEffect(() => {
-    if (!window.GA_INITIALIZED) {
-      initGA();
-      window.GA_INITIALIZED = true
-    }
-    logPageView();
-  }, [])
 
   return (
     <React.Fragment>

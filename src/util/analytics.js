@@ -16,7 +16,7 @@ export const logEvent = (category = "", action = "") => {
 }
 
 export const logException = (description = "", action = "", fatal = false) => {
-  if (description) {
+  if (description && action) {
     ReactGA.exception({ description, action, fatal })
   }
 }
