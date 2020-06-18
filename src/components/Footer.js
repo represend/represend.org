@@ -19,11 +19,11 @@ const Footer = (props) => {
     <footer className={classes.footer}>
       <Container maxWidth="sm">
         <Typography className={classes.typography} variant="body2" align="center">
-          {new Date().getFullYear()} {" Represend"} 
+          {new Date().getFullYear()} {" represend.org"} 
           {" | "}
           <Link color="inherit" href="https://github.com/represend/represend.org" target="_blank">
             {"Contribute"}
-          </Link>{" "}
+          </Link>
         </Typography>
       </Container>
     </footer>
