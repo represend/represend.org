@@ -7,17 +7,26 @@ import { Box, Grid, FormControl, FormHelperText, TextField, InputAdornment, Icon
 import { findLocation } from "../util/util";
 
 const useStyles = makeStyles((theme) => ({
-  searchbar: {
+  form: {
+    width: "100%",
+    maxWidth: "300px"
   },
   input: {
-    [`& fieldset`]: {
+    '& .MuiOutlinedInput-root': {
       borderRadius: 20,
+      paddingRight: 14,
+      backgroundColor: props => props.inverted && "white",
+      '& .MuiInputAdornment-root': {
+        marginLeft: 0,
+      }
     },
-    minWidth: "300px"
+    width: "100%",
+    maxWidth: "300px",
+    minWidth: "140px"
   },
-  loadingCircle: {
-    paddingTop: theme.spacing(2)
-  }
+  helper: {
+    color: props => props.inverted ? "white" : "black",
+  },
 }));
 
 const SearchBar = (props) => {
@@ -72,73 +81,65 @@ const SearchBar = (props) => {
   };
   
   return (
-    <Grid container
-      className={classes.searchbar} 
-      direction="column" 
-      justify="center" 
-      alignItems="center"
-    >
-      <FormControl variant="outlined">
-        <TextField
-          id="search-input"
-          className={classes.input}
-          variant="outlined"
-          placeholder="San Francisco, Los Angeles, New York, ..."
-          value={value}
-          onChange={(event) => {
-            setValue(event.target.value)
-          }}
-          onKeyPress={(event) => {
-            if (event.key==="Enter") {
-              handleSearch();
-              event.preventDefault();
-            };
-          }}
-          InputProps={{
-            endAdornment: 
-              <InputAdornment position="end">
-                <Tooltip title="Search">
-                  <IconButton
-                    aria-label="search"
-                    onClick={handleSearch}
-                    edge="end"
-                  >
-                    <Search/>
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={loading ? "Cancel" : "Find Me"}>
-                  <IconButton
-                    aria-label="action-icons"
-                    onClick={loading ? (() => {setLoading(false)}) : handleLocateUser}
-                    edge="end"
-                  >
-                    {loading ? (
-                      <Box position="relative" display="inline-flex">
-                        <CircularProgress size={24}/>
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Clear/>
-                        </Box>
+    <FormControl variant="outlined">
+      <TextField
+        className={classes.input}
+        variant="outlined"
+        placeholder="San Francisco, Los Angeles, New York, ..."
+        value={value}
+        onChange={(event) => {
+          setValue(event.target.value)
+        }}
+        onKeyPress={(event) => {
+          if (event.key==="Enter") {
+            handleSearch();
+            event.preventDefault();
+          };
+        }}
+        InputProps={{
+          endAdornment: 
+            <InputAdornment position="end">
+              <Tooltip title="Search">
+                <IconButton
+                  aria-label="search"
+                  onClick={handleSearch}
+                  edge="end"
+                >
+                  <Search/>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={loading ? "Cancel" : "Find Me"}>
+                <IconButton
+                  aria-label="action-icons"
+                  onClick={loading ? (() => {setLoading(false)}) : handleLocateUser}
+                  edge="end"
+                >
+                  {loading ? (
+                    <Box position="relative" display="inline-flex">
+                      <CircularProgress size={24}/>
+                      <Box
+                        top={0}
+                        left={0}
+                        bottom={0}
+                        right={0}
+                        position="absolute"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Clear/>
                       </Box>
-                    ) : (
-                      <MyLocation/>
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </InputAdornment>
-          }}
-        />
-        <FormHelperText id="search-helper-text">Find with City, County, or Zip Code</FormHelperText>
-      </FormControl>
-    </Grid>
+                    </Box>
+                  ) : (
+                    <MyLocation/>
+                  )}
+                </IconButton>
+              </Tooltip>
+            </InputAdornment>
+        }}
+      />
+      {!props.simple && <FormHelperText className={classes.helper}>Find with City, County, or Zip Code</FormHelperText>}
+    </FormControl>
   )
 }
 
