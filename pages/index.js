@@ -13,7 +13,11 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "70vh"
   },
   text: {
-    color: "black"
+    color: "black",
+  },
+  about: {
+    color: "black",
+    textDecoration: "underline"
   },
   link: {
     cursor: "pointer"
@@ -42,7 +46,7 @@ const Home = (props) => {
           </Grid>
           <Grid className={classes.link} item>
             <Link href="/about">
-              <Typography className={classes.text} variant="h5">
+              <Typography className={classes.about} variant="h5">
                 How To Help 💡
               </Typography>
             </Link>
