@@ -13,27 +13,25 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   footer: {
     padding: theme.spacing(3, 2),
     marginTop: "auto",
-    backgroundColor:
-      theme.palette.type === "light" ? theme.palette.grey[200] : theme.palette.grey[800],
   },
 }));
 
 const Layout = (props) => {
   const classes = useStyles(props);
 
-  const { children, search, address, titlePage } = props;
+  const { children, search, address } = props;
   return (
     <div className={classes.root}>
       <Header search={search} address={address}/>
       <Container component="main" className={classes.main}>
         {children}
       </Container>
-      <Footer inverted={titlePage}/>
+      <Footer/>
     </div>
   );
 };

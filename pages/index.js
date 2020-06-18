@@ -9,9 +9,8 @@ import SearchBar from "../src/components/SearchBar"
 import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: theme.spacing(6),
-    paddingBottom: theme.spacing(6)
+  grid: {
+    minHeight: "70vh"
   },
   text: {
     color: "black"
@@ -21,14 +20,14 @@ const useStyles = makeStyles((theme) => ({
 const Home = (props) => {
   const classes = useStyles();
   return (
-    <Layout titlePage>
-      <Container className={classes.root} maxWidth="md">
+    <Layout>
+      <Container maxWidth="md">
         <Grid 
+          className={classes.grid}
           container
           direction="column" 
-          justify="space-around"
+          justify="space-evenly"
           alignItems="stretch"
-          spacing={10}
         >
           <Grid item>
             <Typography className={classes.text} variant="h4">
