@@ -3,22 +3,22 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 let theme = createMuiTheme({
   typography: {
     fontFamily: "Noto, sans-serif",
-    letter: "Noto Serif, serif"
+    letter: "Noto Serif, serif",
   },
   palette: {
     primary: {
-      main: "#5B5EA6",
+      main: "#3579DC",
     },
     secondary: {
-      main: "#BDBEDB",
+      main: "#FFFFFF",
     },
     logo: {
-      main: "#FFFFFF",
-      secondary: "#BDBEDB"
+      main: "#000000",
+      secondary: "#959595"
     },
     logoSecondary: {
-      main: "#5B5EA6",
-      secondary: "#BDBEDB"
+      main: "#000000",
+      secondary: "#959595"
     },
     error: {
       main: "#CC0000",
@@ -26,7 +26,7 @@ let theme = createMuiTheme({
     },
     background: {
       default: "#FFFFFF",
-      secondary: "#5B5EA6"
+      secondary: "#FFFFFF"
     }
   },
 });

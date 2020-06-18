@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(6)
   },
   text: {
-    color: "white"
+    color: "black"
   }
 }));
 
@@ -36,7 +36,7 @@ const Home = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete inverted/> : <SearchBar inverted/>}
+            {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
           </Grid>
           <Grid item>
             <Link href="/about">

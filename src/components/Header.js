@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Link } from "@material-ui/core"
+import { Grid, Link, Divider } from "@material-ui/core"
 
 import Logo from "./Logo"
 import SearchBar from "./SearchBar"
@@ -11,7 +11,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.secondary,
   },
   search: {
-    maxWidth: "300px"
+    maxWidth: "300px",
+    paddingRight: theme.spacing(0),
+    paddingLeft: theme.spacing(1)
+  },
+  divider: {
+    margin: "0 30% 0 30%",
+    height: "0.8px",
+    backgroundColor: "black"
   }
 }));
 
@@ -19,6 +26,7 @@ const Header = ({ search = false, address }) => {
   const classes = useStyles()
 
   return (
+    <div>
     <Grid container
       className={classes.header}
       direction="row" 
@@ -32,10 +40,12 @@ const Header = ({ search = false, address }) => {
       </Grid>
       {search && (
         <Grid className={classes.search} item xs>
-          {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete address={address} simple inverted/> : <SearchBar address={address} simple inverted/>}
+          {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete address={address} simple/> : <SearchBar address={address} simple/>}
         </Grid>
       )}
     </Grid>
+    <Divider className={classes.divider}/>
+    </div>
   );
 };
 
