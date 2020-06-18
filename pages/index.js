@@ -10,7 +10,11 @@ import SearchBarAutocomplete from "../src/components/SearchBarAutocomplete"
 
 const useStyles = makeStyles((theme) => ({
   grid: {
-    minHeight: "70vh"
+    minHeight: "70vh",
+    '& .MuiGrid-item': {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3)
+    }
   },
   text: {
     color: "black",
