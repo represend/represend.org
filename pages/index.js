@@ -45,7 +45,7 @@ const Home = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete/> : <SearchBar/>}
+            {process.env.AUTOCOMPLETE === "true" ? <SearchBarAutocomplete/> : <SearchBar/>}
           </Grid>
           <Grid className={classes.link} item>
             <Link href="/about">
