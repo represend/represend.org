@@ -1,3 +1,4 @@
+import React from "react"
 import Link from "next/link"
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -53,7 +54,7 @@ const Header = ({ search = false, address }) => {
       </Grid>
       {search && (
         <Grid className={classes.search} item xs>
-          {process.env.AUTOCOMPLETE ? <SearchBarAutocomplete address={address} simple/> : <SearchBar address={address} simple/>}
+          {process.env.AUTOCOMPLETE === "true" ? <SearchBarAutocomplete address={address} simple/> : <SearchBar address={address} simple/>}
         </Grid>
       )}
     </Grid>

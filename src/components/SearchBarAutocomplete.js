@@ -1,3 +1,4 @@
+import React from "react"
 import Router from "next/router"
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
